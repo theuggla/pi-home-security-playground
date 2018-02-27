@@ -5,6 +5,7 @@ let fs = require('fs')
 // middleware
 let corsMiddleware = require('restify-cors-middleware')
 let plugins = require('restify').plugins
+let proxy = require('./middleware/proxy.js')
 
 // variables
 let port = process.env.PORT || 2323
@@ -26,7 +27,7 @@ let cors = corsMiddleware({
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
   name: 'security-gateway',
-httpsServerOptions: httpsServerOptions
+  httpsServerOptions: httpsServerOptions
 })
 
 // Middleware -------------------------------------------------------------------------------------------------
@@ -36,6 +37,9 @@ server.use(cors.actual)
 
 // JSON
 server.use(plugins.jsonBodyParser())
+
+//
+server.use(proxy())
 
 // Routes ------------------------------------------------------------------------------------------------------
 server.get('/', (req, res, next) => { res.send({hello: 'from gateway'}); console.log('got request') })

@@ -23,6 +23,7 @@
   "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "http-proxy": "^1.16.2",
     "restify": "^6.3.4",
     "restify-cors-middleware": "^1.1.0"
   }
