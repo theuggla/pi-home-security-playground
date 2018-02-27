@@ -1,0 +1,24 @@
+{
+  "name": "home-security",
+  "version": "1.0.0",
+  "description": "home security system for raspberry pi",
+  "main": "pi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theuggla/pi-home-security-playground.git"
+  },
+  "keywords": [
+    "raspberry",
+    "node",
+    "slack"
+  ],
+  "author": "Molly Arhammar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theuggla/pi-home-security-playground/issues"
+  },
+  "homepage": "https://github.com/theuggla/pi-home-security-playground#readme"
+}
