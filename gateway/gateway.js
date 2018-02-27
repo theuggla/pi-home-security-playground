@@ -1,6 +1,7 @@
 // Requires ---------------------------------------------------------------------------------------------------
 let restify = require('restify')
 let fs = require('fs')
+let path = require('path')
 
 // middleware
 let corsMiddleware = require('restify-cors-middleware')
@@ -9,13 +10,14 @@ let proxy = require('./middleware/proxy.js')
 
 // variables
 let port = process.env.PORT || 2323
+let cwd = __dirname || process.cwd()
 
 // Config -----------------------------------------------------------------------------------------------------
 require('dotenv').config()
 
 let httpsServerOptions = {
-  key: fs.readFileSync('./certs/sslkey.pem'),
-  cert: fs.readFileSync('./certs/sslcert.pem'),
+  key: fs.readFileSync(path.resolve(cwd, './certs/sslkey.pem')),
+  cert: fs.readFileSync(path.resolve(cwd, './certs/sslcert.pem')),
   passphrase: process.env.CERT_PASSPHRASE
 }
 
