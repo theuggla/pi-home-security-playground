@@ -25,8 +25,8 @@ let cors = corsMiddleware({
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
-  httpsServerOptions: httpsServerOptions,
-  name: 'security-gateway'
+  name: 'security-gateway',
+httpsServerOptions: httpsServerOptions
 })
 
 // Middleware -------------------------------------------------------------------------------------------------
