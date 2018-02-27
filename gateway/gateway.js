@@ -7,7 +7,7 @@ let corsMiddleware = require('restify-cors-middleware')
 let plugins = require('restify').plugins
 
 // variables
-let port = process.env.PORT || 8443
+let port = process.env.PORT || 2323
 
 // Config -----------------------------------------------------------------------------------------------------
 require('dotenv').config()
@@ -25,8 +25,8 @@ let cors = corsMiddleware({
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
-  httpsServerOptions: httpsServerOptions,
-  name: 'security-gateway'
+  name: 'security-gateway',
+httpsServerOptions: httpsServerOptions
 })
 
 // Middleware -------------------------------------------------------------------------------------------------
