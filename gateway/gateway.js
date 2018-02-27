@@ -13,16 +13,13 @@ let port = process.env.PORT || 2323
 let cwd = __dirname || process.cwd()
 
 // Config -----------------------------------------------------------------------------------------------------
-require('dotenv').config()
+require('dotenv').config({path: path.join(cwd, '/.env')})
 
 let httpsServerOptions = {
   key: fs.readFileSync(path.resolve(cwd, './certs/sslkey.pem')),
   cert: fs.readFileSync(path.resolve(cwd, './certs/sslcert.pem')),
   passphrase: process.env.CERT_PASSPHRASE
 }
-
-console.log(httpsServerOptions)
-console.log(process.env.CERT_PASSPHRASE)
 
 let cors = corsMiddleware({
   preflightMaxAge: 5,

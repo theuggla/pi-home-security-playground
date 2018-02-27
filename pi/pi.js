@@ -11,16 +11,13 @@ let port = process.env.PORT || 2424
 let cwd = __dirname || process.cwd()
 
 // Config -----------------------------------------------------------------------------------------------------
-require('dotenv').config()
+require('dotenv').config({path: path.join(cwd, '/.env')})
 
 let httpsServerOptions = {
   key: fs.readFileSync(path.resolve(cwd, './certs/sslkey.pem')),
   cert: fs.readFileSync(path.resolve(cwd, './certs/sslcert.pem')),
   passphrase: process.env.CERT_PASSPHRASE
 }
-
-console.log(httpsServerOptions)
-console.log(process.env.CERT_PASSPHRASE)
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
