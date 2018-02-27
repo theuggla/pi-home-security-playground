@@ -21,6 +21,9 @@ let httpsServerOptions = {
   passphrase: process.env.CERT_PASSPHRASE
 }
 
+console.log(httpsServerOptions)
+console.log(process.env.CERT_PASSPHRASE)
+
 let cors = corsMiddleware({
   preflightMaxAge: 5,
   origins: ['*']

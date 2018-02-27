@@ -19,6 +19,9 @@ let httpsServerOptions = {
   passphrase: process.env.CERT_PASSPHRASE
 }
 
+console.log(httpsServerOptions)
+console.log(process.env.CERT_PASSPHRASE)
+
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
   httpsServerOptions: httpsServerOptions,
