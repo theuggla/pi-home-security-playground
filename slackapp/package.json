@@ -20,5 +20,14 @@
   "bugs": {
     "url": "https://github.com/theuggla/pi-home-security-playground/issues"
   },
-  "homepage": "https://github.com/theuggla/pi-home-security-playground#readme"
+  "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.2",
+    "express-secure-handlebars": "^2.1.0",
+    "passport": "^0.4.0",
+    "passport-slack": "0.0.7",
+    "path": "^0.12.7"
+  }
 }
