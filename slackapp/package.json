@@ -22,12 +22,14 @@
   },
   "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "express-secure-handlebars": "^2.1.0",
     "passport": "^0.4.0",
-    "passport-slack": "0.0.7",
-    "path": "^0.12.7"
+    "passport-slack-oauth2": "^1.0.2",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0"
   }
 }
