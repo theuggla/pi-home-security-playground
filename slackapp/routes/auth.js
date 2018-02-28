@@ -19,29 +19,38 @@ router.route('/')
 /**
  * Authenticate against slack.
  * */
-router.route('/auth/authenticate')
+router.route('/authenticate')
     .get(passport.authenticate('slack', { session: false }))
 
 /**
  * Confirm slack authentication and authorize user.
  * */
-router.route('/auth/authenticate/callback')
+router.route('/authenticate/callback')
     .get(passport.authenticate('slack', { session: false }), (req, res, next) => {
         // check if id is allowed to install. if yes, redirect to install, if no render fail.
-      res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
+      axios.post(process.env.THING_PROXY + '/authorize', {id: req.user.id})
+      .then((response) => {
+        if (response.headers.authorization && response.status.ok) {
+          // spara jwt i database
+          res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
+        } else {
+          res.render('unauth')
+        }
+      })
     }
   )
 
 /**
  * Confirm user authorization of app.
  * */
-router.route('/auth/authorize/callback')
+router.route('/authorize/callback')
     .get((req, res, next) => {
       if (req.query && (req.query.state === process.env.SLACK_STATE)) {
         let query = querystring.stringify({ redirect_uri: process.env.URL + '/auth/authorize/callback', client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, code: req.query.code })
         axios.post('https://slack.com/api/oauth.access', query, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then((response) => {
           console.log(response.data)
+          //spara undan användare
           res.render('success')
         })
       }

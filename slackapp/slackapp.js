@@ -43,6 +43,7 @@ server.use(bodyParser.urlencoded({ extended: true }))
 server.use(passport.initialize())
 
 // Routes ------------------------------------------------------------------------------------------------------
+server.get('/', (req, res, next) => { res.redirect('auth') })
 server.use('/auth', auth)
 
 // Server up ---------------------------------------------------------------------------------------------------
