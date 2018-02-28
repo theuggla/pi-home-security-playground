@@ -30,7 +30,7 @@ let server = restify.createServer({
 server.use(plugins.jsonBodyParser())
 
 // Routes ------------------------------------------------------------------------------------------------------
-server.get('/', (req, res, next) => { res.send({hello: 'from pi'}); console.log('got request in pi') })
+server.get('/properties', (req, res, next) => { res.send({hello: 'from pi properties'}); console.log('got properties request in pi') })
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })

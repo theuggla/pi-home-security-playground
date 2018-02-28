@@ -7,6 +7,8 @@ let router = require('express').Router()
 let passport = require('passport')
 let axios = require('axios')
 let querystring = require('querystring')
+let https = require('https')
+let parse = require('parse-bearer-token')
 
 // Routes--------------------------------------------------------------------------------------------------------
 
@@ -27,14 +29,22 @@ router.route('/authenticate')
  * */
 router.route('/authenticate/callback')
     .get(passport.authenticate('slack', { session: false }), (req, res, next) => {
-        // check if id is allowed to install. if yes, redirect to install, if no render fail.
-      axios.post(process.env.THING_PROXY + '/authorize', {id: req.user.id})
+      axios.post(process.env.THING_PROXY + '/authorize', {id: req.user.id}, {
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
+      })
       .then((response) => {
-        if (response.headers.authorization && response.status.ok) {
-          // spara jwt i database
-          res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
-        } else {
-          res.render('unauth')
+        if (response.headers.authorization) {
+          console.log(req.user.id)
+          console.log(parse(response))
+          // spara jwt + userid i database
+          return res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          return res.render('unauth')
         }
       })
     }
@@ -51,7 +61,7 @@ router.route('/authorize/callback')
         .then((response) => {
           console.log(response.data)
           //spara undan användare
-          res.render('success')
+          return res.render('success')
         })
       }
     })

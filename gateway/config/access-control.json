@@ -1,9 +1,20 @@
 {
+  "open": [
+    "/authorize"
+  ],
   "things": [
     {
       "id": "home-security",
       "url": "https://127.0.0.1:2424",
-      "token": "harumphharumphharumph"
+      "token": "changeme"
+    }
+  ],
+  "protected": [
+    {
+      "uid": "U9G76K1HU",
+      "resources": [
+        "/properties"
+      ]
     }
   ]
 }

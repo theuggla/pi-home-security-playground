@@ -23,8 +23,11 @@
   "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "express-bearer-token": "^2.1.1",
     "http-proxy": "^1.16.2",
+    "jsonwebtoken": "^8.1.1",
     "restify": "^6.3.4",
-    "restify-cors-middleware": "^1.1.0"
+    "restify-cors-middleware": "^1.1.0",
+    "restify-errors": "^6.0.0"
   }
 }
