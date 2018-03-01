@@ -22,7 +22,7 @@ let proxyServer = httpProxy.createProxyServer({
 // Export proxy function.
 module.exports = function () {
   return function proxy (req, res, next) {
-    req.headers['authorization'] = pi.token
+    req.headers['authorization'] = ('Bearer ' + pi.token)
     proxyServer.web(req, res, {target: pi.url})
   }
 }

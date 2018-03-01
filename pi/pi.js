@@ -38,6 +38,9 @@ server.use(plugins.jsonBodyParser())
 // CORS
 server.use(cors())
 
+// Log
+server.use((req, res, next) => { console.log(req.url); next() })
+
 // Authorize
 server.use(bearerToken())
 server.use(auth())

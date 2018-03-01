@@ -11,9 +11,21 @@
   ],
   "protected": [
     {
+      "uid": "U9G76K1U",
+      "resources": [
+        "/", "/model", "/properties", "/actions/soundState", "/actions/takePicture"
+      ]
+    },
+    {
       "uid": "U9G76K1HU",
       "resources": [
-        "/properties"
+        "/", "/model", "/properties", "/properties/sound", "/properties/camera", "/properties/pir", "pir/leds/1", "/actions", "/actions/alarmState", "/actions/soundState", "/actions/takePicture"
+      ]
+    },
+    {
+      "uid": "U9G76HU",
+      "resources": [
+        "/", "/model"
       ]
     }
   ]

@@ -22,13 +22,13 @@ function jwtAuth () {
         .then((result) => {
           checkUserAccess(result, req.path(), (err, user) => {
             if (err) {
-              return next(new err.ForbiddenError({success: false, message: err}))
+              return next(new err.ForbiddenError({success: false, message: 'Unauthorized for that route'}))
             }
             return next()
           })
         })
-        .catch((error) => {
-          return next(new err.ForbiddenError({success: false, message: error.message}))
+        .catch(() => {
+          return next(new err.ForbiddenError({success: false, message: 'Unverified JWT'}))
         })
       }
     }
@@ -41,7 +41,7 @@ function jwtAuth () {
 function checkUserAccess (token, path, callback) {
   let errorMessage = 'Not authorized for this resource!'
   let userAccess = findInAccessList((authorizedUser) => {
-    return authorizedUser.token === token && authorizedUser.resources.indexOf(path) !== -1
+    return authorizedUser.uid === token && authorizedUser.resources.indexOf(path) !== -1
   })
 
   if (userAccess) {

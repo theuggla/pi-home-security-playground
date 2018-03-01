@@ -159,7 +159,7 @@ function createActionsRoutes (model) {
 
   // GET /actions/{actionType}
   router.get(actions.link + '/:actionType', (req, res, next) => {
-    // CReate response
+    // Create response
     req.result = reverseResults(actions.resources[req.params.actionType].data)
     req.actionModel = actions.resources[req.params.actionType]
     req.model = model
@@ -177,7 +177,7 @@ function createActionsRoutes (model) {
     next()
   })
 
-  // GET /actions/{id}/{actionId}
+  // GET /actions/{actionType}/{actionId}
   router.get(actions.link + '/:actionType/:actionId', (req, res, next) => {
     // Get specific action status
     req.result = utils.findObjectInArray(actions.resources[req.params.actionType].data, {id: req.params.actionId})
