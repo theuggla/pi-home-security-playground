@@ -3,6 +3,7 @@ let restify = require('restify')
 let fs = require('fs')
 let path = require('path')
 let bearerToken = require('express-bearer-token')
+let cors = require('cors')
 
 // Middleware
 let plugins = require('restify').plugins
@@ -31,6 +32,9 @@ let server = restify.createServer({
 
 // JSON
 server.use(plugins.jsonBodyParser())
+
+// CORS
+server.use(cors())
 
 // Authorize
 server.use(bearerToken())

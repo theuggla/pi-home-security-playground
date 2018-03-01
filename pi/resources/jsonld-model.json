@@ -1,0 +1,132 @@
+{
+  "@context": "http://schema.org/Product",
+  "@id": "https://localhost:2323",
+  "name": "Home Security WOT Raspberry Pi",
+  "description": "A Rasparry Pi wired as a home security system.",
+  "manufacturer" : "Raspberry Pi",
+  "tags": [
+  "raspberry",
+  "pi",
+  "security"
+  ],
+  "links": {
+    "product": {
+      "link": "https://www.raspberrypi.org/products/raspberry-pi-3-model-b/",
+      "title": "Product this Web Thing is based on"
+    },
+    "properties": {
+      "link": "/properties",
+      "title": "List of Properties",
+      "resources": {
+        "sound": {
+          "name": "Speaker",
+          "description": "A speaker.",
+          "values": {
+            "playing": {
+                "name": "Playing",
+                "description": "Current status (true=making sound)",
+                "type": "boolean"
+              }
+          },
+          "tags": [
+            "public"
+          ]
+        },
+        "camera": {
+          "name": "Camera",
+          "description": "A camera.",
+          "values": {
+            "picture": {
+              "name": "Picture",
+              "description": "Link to latest picture"
+            }
+          },
+          "tags": [
+            "sensor",
+            "public"
+          ]
+        },
+        "pir": {
+          "name": "Passive Infrared",
+          "description": "A passive infrared sensor.",
+          "values": {
+            "presence": {
+              "name": "Presence",
+              "description": "Current sensor value (true=motion detected)",
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "sensor",
+            "public"
+          ]
+        },
+        "leds": {
+          "name": "LEDs",
+          "description": "The LEDs of this device.",
+          "values": {
+            "1": {
+              "name": "LED 1"
+            }
+          },
+          "tags": [
+            "sensor",
+            "public"
+          ]
+        }
+      },
+      "keypad": {
+        "name": "Keypad",
+        "description": "The keypad of this device.",
+        "values": {
+          "input": {
+            "name": "Input",
+            "description": "Currently inputted code"
+          },
+        "tags": [
+          "sensor",
+          "private"
+        ]
+      }
+    }
+    },
+    "actions": {
+      "link": "/actions",
+      "title": "Actions of this Web Thing",
+      "resources": {
+        "alarmState": {
+          "name": "Change alarm state",
+          "description": "Turn the alarm on and off",
+          "values": {
+            "state": {
+              "type": "boolean",
+              "required" : true
+            },
+            "code": {
+              "type": "String",
+              "required": true
+            }
+          }
+        },
+        "takePicture": {
+          "name": "Take Picture",
+          "description": "Take a picture with the camera"
+        },
+        "soundState": {
+          "name": "Change speaker state",
+          "description": "Turn the sound on and off",
+          "values": {
+            "state": {
+              "type": "boolean",
+              "required" : true
+            }
+          }
+        }
+      }
+    },
+    "ui": {
+      "link": "https://lysandepi.duckdns.org",
+      "title": "User Interface"
+    }
+  }
+}
