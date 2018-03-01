@@ -4,6 +4,8 @@ let fs = require('fs')
 let path = require('path')
 let bearerToken = require('express-bearer-token')
 let cors = require('cors')
+let createRoutes = require('./routes/routesCreator')
+let model = require('./resources/model')
 
 // Middleware
 let plugins = require('restify').plugins
@@ -41,7 +43,7 @@ server.use(bearerToken())
 server.use(auth())
 
 // Routes ------------------------------------------------------------------------------------------------------
-server.get('/properties', (req, res, next) => { res.send({hello: 'from pi properties'}); console.log('got properties request in pi') })
+createRoutes(server, model)
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })
