@@ -7,12 +7,14 @@ let access = require('../config/access-control.json')
 let jwt = require('../lib/jwt')
 let err = require('restify-errors')
 
+/*
+*Authorizes a users JWT against the path they are accessing
+*/
 function jwtAuth () {
   return function (req, res, next) {
     if (isOpen(req.path())) {
       return next()
     } else {
-      console.log(req.token)
       if (!req.token) {
         return next(new err.UnauthorizedError({success: false, message: 'API token missing.'}))
       } else {
@@ -33,6 +35,9 @@ function jwtAuth () {
   }
 };
 
+/*
+*Checks if the user is authorizedto acces the path.
+*/
 function checkUserAccess (token, path, callback) {
   let errorMessage = 'Not authorized for this resource!'
   let userAccess = findInAccessList((authorizedUser) => {
@@ -46,14 +51,23 @@ function checkUserAccess (token, path, callback) {
   }
 }
 
+/*
+*Finds something in the access list.
+*/
 function findInAccessList (filter) {
   return access.protected.filter(filter)[0]
 }
 
+/*
+*Checks if the path is open.
+*/
 function isOpen (path) {
   return (access.open.indexOf(path) !== -1)
 }
 
+/*
+*Checks if the user is in the access list.
+*/
 function isUserAuthorized (socialUserId) {
   let result = findInAccessList((authorizedUser) => {
     return authorizedUser.uid === socialUserId
@@ -66,10 +80,14 @@ function isUserAuthorized (socialUserId) {
   }
 }
 
+/*
+*Returnesa signed JWT for the user.
+*/
 function getJWTToken (socialUserId) {
   return jwt.create(socialUserId)
 }
 
+// Exports.
 module.exports = {
   jwtAuth: jwtAuth,
   isUserAuthorized: isUserAuthorized,
