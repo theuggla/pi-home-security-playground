@@ -23,6 +23,8 @@
   "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
-    "restify": "^6.3.4"
+    "express-bearer-token": "^2.1.1",
+    "restify": "^6.3.4",
+    "restify-errors": "^6.0.0"
   }
 }

@@ -2,11 +2,13 @@
 let restify = require('restify')
 let fs = require('fs')
 let path = require('path')
+let bearerToken = require('express-bearer-token')
 
-// middleware
+// Middleware
 let plugins = require('restify').plugins
+let auth = require('./middleware/auth')
 
-// variables
+// Variables
 let port = process.env.PORT || 2424
 let cwd = __dirname || process.cwd()
 
@@ -26,8 +28,13 @@ let server = restify.createServer({
 })
 
 // Middleware -------------------------------------------------------------------------------------------------
+
 // JSON
 server.use(plugins.jsonBodyParser())
+
+// Authorize
+server.use(bearerToken())
+server.use(auth())
 
 // Routes ------------------------------------------------------------------------------------------------------
 server.get('/properties', (req, res, next) => { res.send({hello: 'from pi properties'}); console.log('got properties request in pi') })
