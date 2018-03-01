@@ -47,7 +47,7 @@ server.pre(cors())
 server.pre(linkHeader())
 
 // Log
-server.pre((req, res, next) => { console.log('url' + req.url); next() })
+server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next() })
 
 // Authorize
 server.use(bearerToken())

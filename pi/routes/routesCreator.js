@@ -7,6 +7,7 @@ let RestifyRouter = require('restify-router').Router
 let router = new RestifyRouter()
 let uuid = require('node-uuid')
 let utils = require('../lib/utils')
+let errs = require('restify-errors')
 
 // Creates routes.
 function create (server, model, respond) {
@@ -146,13 +147,18 @@ function createActionsRoutes (model, respond) {
   router.post(actions.link + '/:actionType', (req, res, next) => {
     // Create action
     let action = req.body
+
+    if (!action) return next(new errs.BadRequestError('Missing parametes.'))
+
     action.id = uuid.v1()
     action.status = 'pending'
     action.timestamp = utils.isoTimestamp()
 
     // Push action to actions-array in model.
+    let resourceLocation = req.href() + '/' + action.id
+    console.log(resourceLocation)
     actions.resources[req.params.actionType].data.push(action)
-    res.location(req.originalUrl + '/' + action.id)
+    res.setHeader('location', resourceLocation)
 
     return next()
   }, respond)

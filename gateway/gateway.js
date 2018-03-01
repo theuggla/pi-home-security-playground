@@ -37,6 +37,9 @@ let server = restify.createServer({
 
 // Middleware -------------------------------------------------------------------------------------------------
 
+// Log
+server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next() })
+
 // Clean up route
 server.pre(plugins.pre.dedupeSlashes())
 
@@ -44,20 +47,13 @@ server.pre(plugins.pre.dedupeSlashes())
 server.pre(cors.preflight)
 server.use(cors.actual)
 
-// Log
-server.pre((req, res, next) => { console.log('url' + req.url); next() })
-
-// JSON
-server.pre(plugins.jsonBodyParser())
-
 // Authorize
 server.pre(bearerToken())
 server.use(auth.jwtAuth())
 
 // Routes ------------------------------------------------------------------------------------------------------
-
 // Authorize
-server.post('/authorize', (req, res, next) => {
+server.post('/authorize', plugins.jsonBodyParser(), (req, res, next) => {
   if (auth.isUserAuthorized(req.body.id)) {
     let jwt = auth.getJWTToken(req.body.id)
     res.header('Authorization', 'Bearer ' + jwt)

@@ -11,7 +11,9 @@ function handleResponse () {
       req.rooturl = req.headers.host
 
       return res.send(req.result)
-    } else if (res.location) {
+    } else if (res.header('location')) {
+      console.log('got location header')
+      console.log(res.header('location'))
       return res.send(204)
     } else {
       next()

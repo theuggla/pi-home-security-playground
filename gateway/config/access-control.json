@@ -19,7 +19,7 @@
     {
       "uid": "U9G76K1HU",
       "resources": [
-        "/", "/model", "/properties", "/properties/sound", "/properties/camera", "/properties/pir", "pir/leds/1", "/actions", "/actions/alarmState", "/actions/soundState", "/actions/takePicture"
+        "/", "/model", "/properties", "/properties/sound", "/properties/camera", "/properties/pir", "/properties/leds", "/actions", "/actions/alarmState", "/actions/soundState", "/actions/takePicture"
       ]
     },
     {
