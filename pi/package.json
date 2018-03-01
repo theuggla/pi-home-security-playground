@@ -29,6 +29,7 @@
     "node-uuid": "^1.4.8",
     "restify": "^6.3.4",
     "restify-errors": "^6.0.0",
+    "restify-links": "^1.1.0",
     "restify-router": "^0.5.0"
   }
 }

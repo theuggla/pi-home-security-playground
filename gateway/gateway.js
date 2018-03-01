@@ -37,15 +37,21 @@ let server = restify.createServer({
 
 // Middleware -------------------------------------------------------------------------------------------------
 
+// Clean up route
+server.pre(plugins.pre.dedupeSlashes())
+
 // CORS
 server.pre(cors.preflight)
 server.use(cors.actual)
 
+// Log
+server.pre((req, res, next) => { console.log('url' + req.url); next() })
+
 // JSON
-server.use(plugins.jsonBodyParser())
+server.pre(plugins.jsonBodyParser())
 
 // Authorize
-server.use(bearerToken())
+server.pre(bearerToken())
 server.use(auth.jwtAuth())
 
 // Routes ------------------------------------------------------------------------------------------------------
@@ -62,10 +68,8 @@ server.post('/authorize', (req, res, next) => {
 })
 
 // Proxy
-server.use(proxy())
-
-// Catch
-server.get('/', (req, res, next) => { /* Should be proxied befor arriving here */ })
+server.get(/.*/, proxy())
+server.post(/.*/, proxy())
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })

@@ -9,16 +9,16 @@ let uuid = require('node-uuid')
 let utils = require('../lib/utils')
 
 // Creates routes.
-function create (server, model) {
+function create (server, model, respond) {
   // Create data arrays if there are none.
   createDefaultData(model.links.properties.resources)
   createDefaultData(model.links.actions.resources)
 
   // Create the routes.
-  createRootRoute(model)
-  createModelRoutes(model)
-  createPropertiesRoutes(model)
-  createActionsRoutes(model)
+  createRootRoute(model, respond)
+  createModelRoutes(model, respond)
+  createPropertiesRoutes(model, respond)
+  createActionsRoutes(model, respond)
 
   // Apply the routes.
   router.applyRoutes(server)
@@ -27,13 +27,13 @@ function create (server, model) {
 /**
  *  Returns model overview, includes Link-header.
  * */
-function createRootRoute (model) {
+function createRootRoute (model, respond) {
   router.get('/', (req, res, next) => {
     // Create response
     req.model = model
     req.type = 'root'
 
-    let fields = ['id', 'name', 'description', 'tags']
+    let fields = ['@id', 'name', 'description', 'tags']
     req.result = utils.extractFields(fields, model)
 
     // Create Link header
@@ -47,14 +47,14 @@ function createRootRoute (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 }
 
 /**
  * Returns the full model.
  */
-function createModelRoutes (model) {
+function createModelRoutes (model, respond) {
   router.get('/model', (req, res, next) => {
     // Create response
     req.result = model
@@ -67,14 +67,14 @@ function createModelRoutes (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 }
 
 /**
  * Creates routes for getting the property information for all or specific properties.
  */
-function createPropertiesRoutes (model) {
+function createPropertiesRoutes (model, respond) {
   let properties = model.links.properties
 
   // GET /properties
@@ -93,8 +93,8 @@ function createPropertiesRoutes (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 
   // GET /properties/{id}
   router.get(properties.link + '/:id', (req, res, next) => {
@@ -114,14 +114,14 @@ function createPropertiesRoutes (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 }
 
 /**
  * Creates routes for getting information about or taking actions against the Thing.
  */
-function createActionsRoutes (model) {
+function createActionsRoutes (model, respond) {
   let actions = model.links.actions
 
   // GET /actions
@@ -139,8 +139,8 @@ function createActionsRoutes (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 
   // POST /actions/{actionType}
   router.post(actions.link + '/:actionType', (req, res, next) => {
@@ -154,8 +154,8 @@ function createActionsRoutes (model) {
     actions.resources[req.params.actionType].data.push(action)
     res.location(req.originalUrl + '/' + action.id)
 
-    next()
-  })
+    return next()
+  }, respond)
 
   // GET /actions/{actionType}
   router.get(actions.link + '/:actionType', (req, res, next) => {
@@ -174,15 +174,15 @@ function createActionsRoutes (model) {
       type: type
     })
 
-    next()
-  })
+    return next()
+  }, respond)
 
   // GET /actions/{actionType}/{actionId}
   router.get(actions.link + '/:actionType/:actionId', (req, res, next) => {
     // Get specific action status
     req.result = utils.findObjectInArray(actions.resources[req.params.actionType].data, {id: req.params.actionId})
-    next()
-  })
+    return next()
+  }, respond)
 }
 
 /**

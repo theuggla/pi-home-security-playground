@@ -2,7 +2,7 @@
   "@context": "http://schema.org/Product",
   "@id": "https://localhost:2323",
   "name": "Home Security WOT Raspberry Pi",
-  "description": "A Rasparry Pi wired as a home security system.",
+  "description": "A Raspberry Pi wired as a home security system.",
   "manufacturer" : "Raspberry Pi",
   "tags": [
   "raspberry",

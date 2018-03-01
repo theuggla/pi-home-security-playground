@@ -5,11 +5,13 @@ let path = require('path')
 let bearerToken = require('express-bearer-token')
 let cors = require('cors')
 let createRoutes = require('./routes/routesCreator')
+let respond = require('./routes/responseHandler')()
 let model = require('./resources/model')
 
 // Middleware
 let plugins = require('restify').plugins
 let auth = require('./middleware/auth')
+let linkHeader = require('restify-links')
 
 // Variables
 let port = process.env.PORT || 2424
@@ -32,21 +34,27 @@ let server = restify.createServer({
 
 // Middleware -------------------------------------------------------------------------------------------------
 
+// Clean up route
+server.pre(plugins.pre.dedupeSlashes())
+
 // JSON
-server.use(plugins.jsonBodyParser())
+server.pre(plugins.jsonBodyParser())
 
 // CORS
-server.use(cors())
+server.pre(cors())
+
+// Link header
+server.pre(linkHeader())
 
 // Log
-server.use((req, res, next) => { console.log(req.url); next() })
+server.pre((req, res, next) => { console.log('url' + req.url); next() })
 
 // Authorize
 server.use(bearerToken())
 server.use(auth())
 
 // Routes ------------------------------------------------------------------------------------------------------
-createRoutes(server, model)
+createRoutes(server, model, respond)
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })
