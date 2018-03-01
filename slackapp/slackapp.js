@@ -10,6 +10,7 @@ let exphbs = require('express-secure-handlebars')
 let port = process.env.PORT || 2525
 let cwd = __dirname || process.cwd()
 let auth = require('./routes/auth')
+let db = require('./lib/db-connector')
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = express()
@@ -26,6 +27,9 @@ passport.use('slack', new SlackStrategy({
   done(null, profile)
 }
 ))
+
+// DB.
+db.connect()
 
 // View engine.
 server.engine('.hbs', exphbs({

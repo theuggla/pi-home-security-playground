@@ -9,6 +9,7 @@ let axios = require('axios')
 let querystring = require('querystring')
 let https = require('https')
 let parse = require('parse-bearer-token')
+let User = require('../models/User')
 
 // Routes--------------------------------------------------------------------------------------------------------
 
@@ -36,22 +37,26 @@ router.route('/authenticate/callback')
       })
       .then((response) => {
         if (response.headers.authorization) {
-          console.log(req.user.id)
-          console.log(parse(response))
-          // spara jwt + userid i database
-          return res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
+          User.findOrCreate({'slack.id': req.user.id}, {'slack.id': req.user.id, proxyJWT: parse(response)}, (err, result) => {
+            if (err) {
+              return res.send(500)
+            }
+            return res.render('authorize', {link: process.env.URL, state: process.env.SLACK_STATE})
+          })
         }
       })
       .catch((error) => {
-        if (error.response.status === 403) {
+        if (error.response && error.response.status === 403) {
           return res.render('unauth')
+        } else {
+          return res.send(500)
         }
       })
     }
   )
 
 /**
- * Confirm user authorization of app.
+ * Confirm user authorization of app against slack and recieve access token.
  * */
 router.route('/authorize/callback')
     .get((req, res, next) => {
@@ -59,10 +64,18 @@ router.route('/authorize/callback')
         let query = querystring.stringify({ redirect_uri: process.env.URL + '/auth/authorize/callback', client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, code: req.query.code })
         axios.post('https://slack.com/api/oauth.access', query, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then((response) => {
-          console.log(response.data)
-          //spara undan användare
-          return res.render('success')
+          User.findOrCreate({'slack.id': response.data.user_id}, {'slack.id': response.data.user_id, 'slack.accessToken': response.data.access_token, 'slack.webhookURL': response.data.incoming_webhook.url, 'slack.channel': response.data.incoming_webhook.channel}, (err, result) => {
+            if (err) {
+              return res.send(500)
+            }
+            return res.render('success')
+          })
         })
+        .catch(() => {
+          return res.send(500)
+        })
+      } else {
+        return res.send(500)
       }
     })
 
