@@ -85,7 +85,7 @@ function createPropertiesRoutes (model, respond) {
     req.type = 'properties'
     req.entityId = 'properties'
 
-    req.result = utils.modelToResources(properties.resources, true)
+    req.result = utils.modelToResources(properties.resources.filter((action) => { return properties.tags.indexOf('private') === -1 }), true)
 
     // Create Link header
     let type = 'http://model.webofthings.io/#property-resource'
@@ -99,6 +99,9 @@ function createPropertiesRoutes (model, respond) {
 
   // GET /properties/{id}
   router.get(properties.link + '/:id', (req, res, next) => {
+    // Check that property is available
+    if (!properties.resources[req.params.id] || (properties.resources[req.params.id].tags.indexOf('private') !== -1)) return next(new errs.BadRequestError('No such property.'))
+
     // Create response
     req.model = model
     req.propertyModel = properties.resources[req.params.id]
@@ -128,7 +131,7 @@ function createActionsRoutes (model, respond) {
   // GET /actions
   router.get(actions.link, (req, res, next) => {
     // Create response
-    req.result = utils.modelToResources(actions.resources, true)
+    req.result = utils.modelToResources(actions.resources.filter((action) => { return action.tags.indexOf('private') === -1 }), true)
     req.model = model
     req.type = 'actions'
     req.entityId = 'actions'
@@ -154,9 +157,11 @@ function createActionsRoutes (model, respond) {
     action.status = 'pending'
     action.timestamp = utils.isoTimestamp()
 
+    // Check if action type is available
+    if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFoundError('No such action.'))
+
     // Push action to actions-array in model.
     let resourceLocation = req.href() + '/' + action.id
-    console.log(resourceLocation)
     actions.resources[req.params.actionType].data.push(action)
     res.setHeader('location', resourceLocation)
 
@@ -165,6 +170,9 @@ function createActionsRoutes (model, respond) {
 
   // GET /actions/{actionType}
   router.get(actions.link + '/:actionType', (req, res, next) => {
+    // Check if action type is available
+    if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFundError('No such action.'))
+
     // Create response
     req.result = reverseResults(actions.resources[req.params.actionType].data)
     req.actionModel = actions.resources[req.params.actionType]
@@ -180,13 +188,6 @@ function createActionsRoutes (model, respond) {
       type: type
     })
 
-    return next()
-  }, respond)
-
-  // GET /actions/{actionType}/{actionId}
-  router.get(actions.link + '/:actionType/:actionId', (req, res, next) => {
-    // Get specific action status
-    req.result = utils.findObjectInArray(actions.resources[req.params.actionType].data, {id: req.params.actionId})
     return next()
   }, respond)
 }
