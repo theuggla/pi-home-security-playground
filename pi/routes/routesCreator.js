@@ -39,12 +39,13 @@ function createRootRoute (model, respond) {
 
     // Create Link header
     let type = model['@context']
+    let ui = model.links.ui.link
 
     res.links({
       model: '/model/',
       properties: '/properties/',
       actions: '/actions/',
-      ui: '/',
+      ui: ui,
       type: type
     })
 
@@ -85,7 +86,7 @@ function createPropertiesRoutes (model, respond) {
     req.type = 'properties'
     req.entityId = 'properties'
 
-    req.result = utils.modelToResources(properties.resources.filter((action) => { return properties.tags.indexOf('private') === -1 }), true)
+    req.result = utils.modelToResources(properties.resources, true, false)
 
     // Create Link header
     let type = 'http://model.webofthings.io/#property-resource'
@@ -131,7 +132,7 @@ function createActionsRoutes (model, respond) {
   // GET /actions
   router.get(actions.link, (req, res, next) => {
     // Create response
-    req.result = utils.modelToResources(actions.resources.filter((action) => { return action.tags.indexOf('private') === -1 }), true)
+    req.result = utils.modelToResources(actions.resources, true, false)
     req.model = model
     req.type = 'actions'
     req.entityId = 'actions'

@@ -1,3 +1,4 @@
 apps:
   - script   : ./gateway/gateway.js
   - script : ./pi/pi.js
+  - script : ./slackapp/slackapp.js

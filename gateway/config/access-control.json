@@ -19,13 +19,13 @@
     {
       "uid": "U9G76K1HU",
       "resources": [
-        "/", "/model", "/properties", "/properties/sound", "/properties/camera", "/properties/pir", "/properties/leds", "/actions", "/actions/alarmState", "/actions/soundState", "/actions/takePicture"
+        "/", "/model", "/properties/*", "/actions/*"
       ]
     },
     {
       "uid": "U9G76HU",
       "resources": [
-        "/", "/model"
+        "/"
       ]
     }
   ]

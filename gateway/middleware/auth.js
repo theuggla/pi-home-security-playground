@@ -36,16 +36,28 @@ function jwtAuth () {
 };
 
 /*
-*Checks if the user is authorizedto acces the path.
+*Checks if the user is authorized to access the path.
 */
 function checkUserAccess (token, path, callback) {
   let errorMessage = 'Not authorized for this resource!'
-  let userAccess = findInAccessList((authorizedUser) => {
-    return authorizedUser.uid === token && authorizedUser.resources.indexOf(path) !== -1
+  let paths = path.split('/')
+  let concatPath = ''
+
+  let userAccessProper = findInAccessList((authorizedUser) => {
+    return (authorizedUser.uid === token) && (authorizedUser.resources.indexOf(path) !== -1)
   })
 
-  if (userAccess) {
-    callback(null, userAccess)
+  let userAccessWildcard = findInAccessList((authorizedUser) => {
+    return (authorizedUser.uid === token) && (paths.filter((pathway) => {
+      let wildcardPath = concatPath + pathway + '/*'
+      let wildcardPresent = authorizedUser.resources.indexOf(wildcardPath) !== -1
+      concatPath += pathway + '/'
+      return wildcardPresent
+    })[0])
+  })
+
+  if (userAccessProper || userAccessWildcard) {
+    callback(null, userAccessProper || userAccessWildcard)
   } else {
     callback(errorMessage, null)
   }

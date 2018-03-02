@@ -26,21 +26,23 @@ function extractFields (fields, object, target) {
  * @param {Object} subModel The part of the property model to turn into a resource.
  * @param {boolean} withValue Boolean to indicate wheter to return the latest value of the property.
  */
-function modelToResources (subModel, withValue) {
+function modelToResources (subModel, withValue, includePrivate) {
   let resources = []
 
   Object.keys(subModel).forEach((key) => {
     let value = subModel[key]
     let resource = {}
 
-    resource.id = key
-    resource.name = value['name']
+    if (includePrivate || (value.tags && value.tags.indexOf('private') === -1)) {
+      resource.id = key
+      resource.name = value['name']
 
-    if (withValue) {
-      resource.values = value.data[value.data.length - 1]
+      if (withValue) {
+        resource.values = value.data[value.data.length - 1]
+      }
+
+      resources.push(resource)
     }
-
-    resources.push(resource)
   })
 
   return resources
