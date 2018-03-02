@@ -157,6 +157,8 @@ function createActionsRoutes (model, respond) {
     action.id = uuid.v1()
     action.status = 'pending'
     action.timestamp = utils.isoTimestamp()
+    action.type = req.params.actionType
+    action.action = true
 
     // Check if action type is available
     if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFoundError('No such action.'))
