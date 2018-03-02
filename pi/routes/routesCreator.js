@@ -191,6 +191,13 @@ function createActionsRoutes (model, respond) {
 
     return next()
   }, respond)
+
+  // GET /actions/{actionType}/{actionId}
+  router.get(actions.link + '/:actionType/:actionId', (req, res, next) => {
+    // Get specific action status
+    req.result = utils.findObjectInArray(actions.resources[req.params.actionType].data, {id: req.params.actionId})
+    return next()
+  }, respond)
 }
 
 /**
