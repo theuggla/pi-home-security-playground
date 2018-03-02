@@ -7,9 +7,10 @@ let cors = require('cors')
 let createRoutes = require('./routes/routesCreator')
 let respond = require('./routes/responseHandler')()
 let model = require('./resources/model')
+let initPlugins = require('./plugins/plugins')
 
 // Middleware
-let plugins = require('restify').plugins
+let restifyPlugins = require('restify').plugins
 let auth = require('./middleware/auth')
 let linkHeader = require('restify-links')
 
@@ -35,10 +36,10 @@ let server = restify.createServer({
 // Middleware -------------------------------------------------------------------------------------------------
 
 // Clean up route
-server.pre(plugins.pre.dedupeSlashes())
+server.pre(restifyPlugins.pre.dedupeSlashes())
 
 // JSON
-server.pre(plugins.jsonBodyParser())
+server.pre(restifyPlugins.jsonBodyParser())
 
 // CORS
 server.pre(cors())
@@ -55,6 +56,9 @@ server.use(auth())
 
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond)
+
+// Plugins -----------------------------------------------------------------------------------------------------
+initPlugins()
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })

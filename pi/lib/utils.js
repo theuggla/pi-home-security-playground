@@ -4,9 +4,10 @@
 
 // Requires.
 let _ = require('lodash/collection')
+let model = require('./../resources/model')
 
 /**
- * Extracts filds from an object and puts them in another object.
+ * Extracts fields from an object and puts them in another object.
  */
 function extractFields (fields, object, target) {
   if (!target) {
@@ -63,10 +64,25 @@ function findObjectInArray (array, filterObj) {
   return _.find(array, filterObj)
 }
 
+/**
+ * Pushesa data entry onto the relevant data-array,
+ * removing data if the array is too long.
+ */
+function cappedPush (array, entry) {
+  if (array.length >= model.customFields.dataArraySize) {
+    array.shift()
+    array.push(entry)
+  } else {
+    array.push(entry)
+  }
+  return array
+}
+
 // Exports.
 module.exports = {
   extractFields: extractFields,
   modelToResources: modelToResources,
   isoTimestamp: isoTimestamp,
-  findObjectInArray: findObjectInArray
+  findObjectInArray: findObjectInArray,
+  cappedPush: cappedPush
 }

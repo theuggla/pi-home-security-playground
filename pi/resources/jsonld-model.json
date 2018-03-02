@@ -9,6 +9,9 @@
   "pi",
   "security"
   ],
+  "customFields": {
+    "dataArraySize": 20
+  },
   "links": {
     "product": {
       "link": "https://www.raspberrypi.org/products/raspberry-pi-3-model-b/",
