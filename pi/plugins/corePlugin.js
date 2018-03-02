@@ -35,13 +35,15 @@ class CorePlugin {
    * If simulate is true, start simulation, otherwise connect to hardware.
    */
   start () {
-    if (this._actions) this.observeActions() // #E
+    if (this._actions) this.observeActions()
 
     if (this._params.simulate) {
       this.simulate()
     } else {
       this.connectHardware()
     }
+
+    if (this.doStart) this.doStart()
 
     console.info('[plugin started] %s', this._model.name)
   }

@@ -5,19 +5,36 @@
 
 // Requires.
 let CorePlugin = require('./corePlugin')
-let utils = require('./../lib/utils.js')
+let utils = require('./../lib/utils')
+let eventChannel = require('./../lib/eventChannel')
 
 // Class.
 class PirPlugin extends CorePlugin {
+  /**
+   * Listens for alarmState to turn on and off when the alarm turns on and off.
+   */
   constructor (params) {
     super(params, 'pir', ['alarmState'])
-    this.addValue(true)
   }
 
+  /**
+   * Deactivates the sensor and turns the led off.
+   */
   doStop () {
     this._sensor.unexport()
+    eventChannel.emit('ledStateChange', {state: false})
   }
 
+  /**
+   * Turns the LED on.
+   */
+  doStart () {
+    eventChannel.emit('ledStateChange', {state: true})
+  }
+
+  /**
+   * Adds a simulation of a reading.
+   */
   doSimulate () {
     this.addValue(false)
   }
@@ -28,25 +45,32 @@ class PirPlugin extends CorePlugin {
    */
   doAction (value) {
     if (value.code === process.env.ALARM_CODE && value.state === true) {
+      console.log('starting alarm')
       this.start()
     } else if (value.code === process.env.ALARM_CODE && value.state === false) {
+      console.log('stopping alarm')
       this.stop()
     }
 
     value.status = 'completed'
-
-    console.info('Changed value of %s to %s', this._model.name, value.state)
   }
 
+  /**
+   * Creates suitable value for the plugin.
+   */
   createValue (data) {
     return {'presence': data, 'timestamp': utils.isoTimestamp()}
   }
 
+  /**
+   * Connects to the hardware.
+   * Adds value on change.
+   */
   connectHardware () {
     let Gpio = require('onoff').Gpio
     this._sensor = new Gpio(this._model.values.presence.customFields.gpio, 'in', 'both')
     this._sensor.watch((err, value) => {
-      if (err) exit(err)
+      if (err) process.exit(err)
       this.addValue(!!value)
       this.showValue()
     })
