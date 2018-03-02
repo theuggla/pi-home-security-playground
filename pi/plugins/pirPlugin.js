@@ -36,7 +36,19 @@ class PirPlugin extends CorePlugin {
    * Adds a simulation of a reading.
    */
   doSimulate () {
-    this.addValue(false)
+    let newReading = Math.floor(Math.random() * 2)
+    this._reading = this._reading ? this._reading : newReading
+
+    if (newReading !== this._reading) {
+      this.addValue(newReading)
+      this.showValue()
+      this._reading = newReading
+
+      if (this._reading) {
+        eventChannel.emit('takePictureChange', {})
+        eventChannel.emit('soundStateChange', {state: true})
+      }
+    }
   }
 
   /**
@@ -73,6 +85,11 @@ class PirPlugin extends CorePlugin {
       if (err) process.exit(err)
       this.addValue(!!value)
       this.showValue()
+
+      if (value === 1) {
+        eventChannel.emit('takePictureChange', {})
+        eventChannel.emit('soundStateChange', {state: true})
+      }
     })
 
     console.info('Hardware %s sensor started!', this._model.name)
