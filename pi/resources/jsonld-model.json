@@ -106,11 +106,17 @@
               "type": "String",
               "required": true
             }
-          }
+          },
+          "tags": [
+            "public"
+          ]
         },
         "takePicture": {
           "name": "Take Picture",
-          "description": "Take a picture with the camera"
+          "description": "Take a picture with the camera",
+          "tags": [
+            "public"
+          ]
         },
         "soundState": {
           "name": "Change speaker state",
@@ -120,8 +126,23 @@
               "type": "boolean",
               "required" : true
             }
-          }
-        }
+          },
+          "tags": [
+            "public"
+          ]
+        },
+        "ledState": {
+          "name": "Change LED state",
+          "description": "Turn the led on and off",
+          "values": {
+            "state": {
+              "type": "boolean",
+              "required" : true
+            }
+          },
+          "tags": [
+            "private"
+          ]
       }
     },
     "ui": {
