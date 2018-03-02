@@ -36,15 +36,14 @@ class PirPlugin extends CorePlugin {
    * Adds a simulation of a reading.
    */
   doSimulate () {
-    let newReading = Math.floor(Math.random() * 2)
-    this._reading = this._reading ? this._reading : newReading
+    let presence = Boolean(Math.floor(Math.random() * 2))
 
-    if (newReading !== this._reading) {
-      this.addValue(newReading)
+    if (presence !== this._reading) {
+      this.addValue(presence)
       this.showValue()
-      this._reading = newReading
+      this._reading = presence
 
-      if (this._reading) {
+      if (presence) {
         eventChannel.emit('takePictureChange', {})
         eventChannel.emit('soundStateChange', {state: true})
       }
@@ -71,6 +70,8 @@ class PirPlugin extends CorePlugin {
    * Creates suitable value for the plugin.
    */
   createValue (data) {
+    console.log('creating value: ')
+    console.log('presence: ' + data, 'timestamp: ' + utils.isoTimestamp())
     return {'presence': data, 'timestamp': utils.isoTimestamp()}
   }
 

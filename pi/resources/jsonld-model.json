@@ -41,7 +41,7 @@
           "values": {
             "picture": {
               "name": "Picture",
-              "description": "Link to latest picture"
+              "description": "Link to picture"
             }
           },
           "tags": [

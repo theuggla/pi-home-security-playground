@@ -58,7 +58,7 @@ class LedsPlugin extends CorePlugin {
    * Simulates
    */
   doSimulate () {
-    this.addValue(false)
+    // No simulation.
   }
 }
 
