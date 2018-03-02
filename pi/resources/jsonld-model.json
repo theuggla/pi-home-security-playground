@@ -73,22 +73,22 @@
             "sensor",
             "public"
           ]
-        }
-      },
-      "keypad": {
-        "name": "Keypad",
-        "description": "The keypad of this device.",
-        "values": {
-          "input": {
-            "name": "Input",
-            "description": "Currently inputted code"
+        },
+        "keypad": {
+          "name": "Keypad",
+          "description": "The keypad of this device.",
+          "values": {
+            "input": {
+              "name": "Input",
+              "description": "Currently inputted code"
+            }
           },
-        "tags": [
-          "sensor",
-          "private"
-        ]
+          "tags": [
+            "sensor",
+            "private"
+          ]
+        }
       }
-    }
     },
     "actions": {
       "link": "/actions",
@@ -143,6 +143,7 @@
           "tags": [
             "private"
           ]
+        }
       }
     },
     "ui": {
