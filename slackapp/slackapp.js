@@ -10,6 +10,7 @@ let exphbs = require('express-secure-handlebars')
 let port = process.env.PORT || 2525
 let cwd = __dirname || process.cwd()
 let auth = require('./routes/auth')
+let command = require('./routes/command')
 let db = require('./lib/db-connector')
 
 // Declare server ---------------------------------------------------------------------------------------------
@@ -32,8 +33,10 @@ passport.use('slack', new SlackStrategy({
 db.connect()
 
 // View engine.
+server.set('views', path.join(cwd, '/views'))
 server.engine('.hbs', exphbs({
   defaultLayout: 'main',
+  layoutsDir: path.join(cwd, '/views/layouts'),
   extname: '.hbs'
 }))
 server.set('view engine', '.hbs')
@@ -49,6 +52,7 @@ server.use(passport.initialize())
 // Routes ------------------------------------------------------------------------------------------------------
 server.get('/', (req, res, next) => { res.redirect('auth') })
 server.use('/auth', auth)
+server.use('/command', command)
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at port %s', server.name, port) })

@@ -150,7 +150,7 @@
       }
     },
     "ui": {
-      "link": "https://lysandepi.duckdns.org",
+      "link": "https://lysandepi.duckdns.org:2323",
       "title": "User Interface"
     }
   }

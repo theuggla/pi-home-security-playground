@@ -16,7 +16,7 @@ class LedsPlugin extends CorePlugin {
   }
 
   createValue (data) {
-    return {'1': data, '2': false, 'timestamp': utils.isoTimestamp()}
+    return {'1': data, 'timestamp': utils.isoTimestamp()}
   }
 
   /**

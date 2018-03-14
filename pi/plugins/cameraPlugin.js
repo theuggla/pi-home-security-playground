@@ -8,9 +8,9 @@ let CorePlugin = require('./corePlugin')
 let utils = require('./../lib/utils')
 
 // Class.
-class SoundPlugin extends CorePlugin {
+class CameraPlugin extends CorePlugin {
   constructor (params) {
-    super(params, 'sound', ['takePicture'])
+    super(params, 'camera', ['takePicture'])
   }
 
   /**
@@ -62,6 +62,7 @@ class SoundPlugin extends CorePlugin {
     }
 
     value.status = 'completed'
+    this.eventChannel.emit('pictureTaken', {})
 
     console.info('Changed value of %s to %s', this._model.name, value.state)
   }
@@ -75,4 +76,4 @@ class SoundPlugin extends CorePlugin {
 }
 
 // Exports.
-module.exports = SoundPlugin
+module.exports = CameraPlugin

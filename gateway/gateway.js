@@ -52,6 +52,7 @@ server.pre(bearerToken())
 server.use(auth.jwtAuth())
 
 // Routes ------------------------------------------------------------------------------------------------------
+
 // Authorize
 server.post('/authorize', plugins.jsonBodyParser(), (req, res, next) => {
   if (auth.isUserAuthorized(req.body.id)) {

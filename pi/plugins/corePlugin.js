@@ -7,7 +7,7 @@
 let utils = require('./../lib/utils.js')
 let util = require('util')
 let resources = require('./../resources/model')
-let eventChannel = require('./../lib/eventChannel')
+let eventChannel = require('./../resources/model').eventChannel
 
 // Class.
 class CorePlugin {
@@ -28,6 +28,7 @@ class CorePlugin {
 
     this._actions = actionsIds
     this._model = resources.links.properties.resources[propertyId]
+    this.eventChannel = eventChannel
   }
 
   /**
@@ -96,7 +97,7 @@ class CorePlugin {
   observeActions () {
     this._actions.forEach((actionId) => {
       let event = actionId + 'Change'
-      eventChannel.on(event, (action) => {
+      this.eventChannel.on(event, (action) => {
         console.info('[plugin action detected] %s', actionId)
         if (this.doAction) this.doAction(action)
       })

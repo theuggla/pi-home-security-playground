@@ -12,8 +12,6 @@ function handleResponse () {
 
       return res.send(req.result)
     } else if (res.header('location')) {
-      console.log('got location header')
-      console.log(res.header('location'))
       return res.send(204)
     } else {
       next()

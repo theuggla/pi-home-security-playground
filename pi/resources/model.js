@@ -3,7 +3,8 @@
  */
 
 // Requires.
-let eventChannel = require('./../lib/eventChannel')
+let EventEmitter = require('events')
+let eventChannel = new EventEmitter()
 let model = require('./jsonld-model.json')
 
 // Class to handle the changes and emit events.
@@ -32,3 +33,4 @@ let proxiedModel = new Proxy(model, handler)
 
 // Exports.
 module.exports = proxiedModel
+module.exports.eventChannel = eventChannel
