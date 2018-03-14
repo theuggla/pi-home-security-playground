@@ -1,11 +1,10 @@
 /**
- * Module to return the model-json as aProxy that emits events on change.
+ * Module to return the model-json as a Proxy that emits events on change.
  */
 
 // Requires.
-let EventEmitter = require('events')
-let eventChannel = new EventEmitter()
 let model = require('./jsonld-model.json')
+let eventChannel = require('./../lib/event-channel')
 
 // Class to handle the changes and emit events.
 class Handler {
@@ -16,7 +15,7 @@ class Handler {
 
   set (obj, prop, value) {
     if (value.action === true) {
-      console.log('event')
+      console.log('action event')
       let eventType = value.type + 'Change'
       console.log('emitting event ' + eventType)
       eventChannel.emit(eventType, value)
@@ -33,4 +32,3 @@ let proxiedModel = new Proxy(model, handler)
 
 // Exports.
 module.exports = proxiedModel
-module.exports.eventChannel = eventChannel

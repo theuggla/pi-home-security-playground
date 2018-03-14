@@ -7,7 +7,7 @@
 let utils = require('./../lib/utils.js')
 let util = require('util')
 let resources = require('./../resources/model')
-let eventChannel = require('./../resources/model').eventChannel
+let eventChannel = require('./../lib/event-channel')
 
 // Class.
 class CorePlugin {

@@ -12,6 +12,7 @@ let initPlugins = require('./plugins/plugins')
 // Middleware
 let restifyPlugins = require('restify').plugins
 let auth = require('./middleware/auth')
+let webhook = require('./middleware/webhook')
 let linkHeader = require('restify-links')
 
 // Variables
@@ -53,6 +54,7 @@ server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next()
 // Authorize
 server.use(bearerToken())
 server.use(auth())
+server.use(webhook())
 
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond)

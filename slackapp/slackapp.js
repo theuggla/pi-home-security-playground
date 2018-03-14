@@ -11,6 +11,7 @@ let port = process.env.PORT || 2525
 let cwd = __dirname || process.cwd()
 let auth = require('./routes/auth')
 let command = require('./routes/command')
+let event = require('./routes/event')
 let db = require('./lib/db-connector')
 
 // Declare server ---------------------------------------------------------------------------------------------
@@ -53,6 +54,7 @@ server.use(passport.initialize())
 server.get('/', (req, res, next) => { res.redirect('auth') })
 server.use('/auth', auth)
 server.use('/command', command)
+server.use('/event', event)
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at port %s', server.name, port) })
