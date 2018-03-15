@@ -51,25 +51,22 @@ function upgrade (subscriptions) {
  * Will alert all subcribed webhooks of events.
  */
 function alert (subscriptions) {
-  return function (req, res, next) {
-    subscriptions.forEach((subscription) => {
-      eventChannel.on(subscription.event, () => {
-        axios({
-          method: 'POST',
-          url: subscription.callback,
-          data: {
-            event: subscription.event,
-            token: process.env.GATEWAY_TOKEN
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+  console.log('adding alerts')
+  subscriptions.forEach((subscription) => {
+    eventChannel.on(subscription.event, () => {
+      axios({
+        method: 'POST',
+        url: subscription.callback,
+        data: {
+          event: subscription.event,
+          token: process.env.GATEWAY_TOKEN
+        }
+      })
+      .catch((error) => {
+        console.log(error)
       })
     })
-
-    return next()
-  }
+  })
 }
 
 /**
