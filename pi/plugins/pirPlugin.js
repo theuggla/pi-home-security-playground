@@ -57,12 +57,14 @@ class PirPlugin extends CorePlugin {
     if (value.code === process.env.ALARM_CODE && value.state === true) {
       console.log('starting alarm')
       this.start()
+      value.status = 'completed'
     } else if (value.code === process.env.ALARM_CODE && value.state === false) {
       console.log('stopping alarm')
       this.stop()
+      value.status = 'completed'
+    } else {
+      value.status = 'rejected'
     }
-
-    value.status = 'completed'
   }
 
   /**

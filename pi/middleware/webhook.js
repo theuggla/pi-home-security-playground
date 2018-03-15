@@ -4,7 +4,6 @@
 
 // Requires.
 let errs = require('restify-errors')
-let subscriptions = require('./../resources/subscriptions')
 let axios = require('axios')
 let eventChannel = require('./../lib/event-channel')
 
@@ -13,10 +12,8 @@ let eventChannel = require('./../lib/event-channel')
  * the request contains the upgrade: webhook header. Needs a callback
  * header to call when the event is fired.
  */
-function upgrade () {
+function upgrade (subscriptions) {
   return function (req, res, next) {
-    console.log('upgrading to webhook')
-
     if (req.header('upgrade') && req.header('upgrade') === 'webhook') {
       if (req.header('callback')) {
         let id = Date.now()
@@ -24,8 +21,6 @@ function upgrade () {
         let event = getEvent(req.path())
 
         subscriptions.push({id: id, callback: callback, event: event})
-        console.log('upgraded')
-        console.log({id: id, callback: callback, event: event})
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
@@ -38,7 +33,7 @@ function upgrade () {
 /**
  * Will alert all subcribed webhooks of events.
  */
-function alert () {
+function alert (subscriptions) {
   return function (req, res, next) {
     subscriptions.forEach((subscription) => {
       eventChannel.on(subscription.event, () => {

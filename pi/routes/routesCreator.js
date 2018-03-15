@@ -10,7 +10,7 @@ let utils = require('../lib/utils')
 let errs = require('restify-errors')
 
 // Creates routes.
-function create (server, model, respond) {
+function create (server, model, respond, subscriptions) {
   // Create data arrays if there are none.
   createDefaultData(model.links.properties.resources)
   createDefaultData(model.links.actions.resources)
@@ -20,6 +20,7 @@ function create (server, model, respond) {
   createModelRoutes(model, respond)
   createPropertiesRoutes(model, respond)
   createActionsRoutes(model, respond)
+  createSubscriptionRoutes(subscriptions, respond)
 
   // Apply the routes.
   router.applyRoutes(server)
@@ -149,19 +150,21 @@ function createActionsRoutes (model, respond) {
 
   // POST /actions/{actionType}
   router.post(actions.link + '/:actionType', (req, res, next) => {
+    // Check if action type is available
+    if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFoundError('No such action.'))
+
+    // Check for required parameters
+    if (!checkParameters(actions, req.params.actionType, req.body)) return next(new errs.BadRequestError('Missing parametes.'))
+
     // Create action
     let action = req.body
-
-    if (!action) return next(new errs.BadRequestError('Missing parametes.'))
+    if (!action) action = {}
 
     action.id = uuid.v1()
     action.status = 'pending'
     action.timestamp = utils.isoTimestamp()
     action.type = req.params.actionType
     action.action = true
-
-    // Check if action type is available
-    if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFoundError('No such action.'))
 
     // Push action to actions-array in model.
     let resourceLocation = req.href() + '/' + action.id
@@ -203,6 +206,18 @@ function createActionsRoutes (model, respond) {
 }
 
 /**
+ * Returns the subscriptions.
+ */
+function createSubscriptionRoutes (subscriptions, respond) {
+  router.get('/subscriptions', (req, res, next) => {
+    // Create response
+    req.result = subscriptions
+
+    return next()
+  }, respond)
+}
+
+/**
  * Creates data arrays if there are no readings or actions present.
  */
 function createDefaultData (resources) {
@@ -220,6 +235,24 @@ function createDefaultData (resources) {
  */
 function reverseResults (array) {
   return array.slice(0).reverse()
+}
+
+/**
+ * Checks that all the required parameters are given.
+ */
+function checkParameters (actions, action, parameters) {
+  let result
+  if (!actions.resources[action].values) return true
+
+  let params = Object.keys(actions.resources[action].values)
+  params.every((param) => {
+    if (actions.resources[action].values[param].required === true) {
+      result = parameters[param] !== undefined
+      return result
+    }
+  })
+
+  return result
 }
 
 // Exports.

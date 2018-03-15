@@ -7,6 +7,7 @@ let cors = require('cors')
 let createRoutes = require('./routes/routesCreator')
 let respond = require('./routes/responseHandler')()
 let model = require('./resources/model')
+let subscriptions = require('./resources/subscriptions')
 let initPlugins = require('./plugins/plugins')
 
 // Middleware
@@ -54,11 +55,11 @@ server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next()
 // Authorize
 server.use(bearerToken())
 server.use(auth())
-server.use(webhook.upgrade())
-server.use(webhook.alert())
+server.use(webhook.upgrade(subscriptions))
+server.use(webhook.alert(subscriptions))
 
 // Routes ------------------------------------------------------------------------------------------------------
-createRoutes(server, model, respond)
+createRoutes(server, model, respond, subscriptions)
 
 // Plugins -----------------------------------------------------------------------------------------------------
 initPlugins()

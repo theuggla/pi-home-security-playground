@@ -14,7 +14,7 @@ router.use((req, res, next) => {
 })
 
 /**
- * Render authentication view.
+ * Receive commands from slack.
  * */
 router.route('/')
   .post((req, res, next) => {
