@@ -38,6 +38,7 @@ class PirPlugin extends CorePlugin {
     let presence = Boolean(Math.floor(Math.random() * 2))
 
     if (presence !== this._reading) {
+      console.log('presece: ' + presence)
       this.addValue(presence)
       this.showValue()
       this._reading = presence
