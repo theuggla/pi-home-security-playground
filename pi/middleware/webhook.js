@@ -29,15 +29,14 @@ function upgrade (subscriptions) {
       }
     } else if (req.header('downgrade') && req.header('downgrade') === 'webhook') {
       if (req.header('callback')) {
-        let index = subscriptions.findIndex((sub) => {
-          return sub.callback === req.header('callback')
+        subscriptions = subscriptions.filter((sub) => {
+          return sub.callback !== req.header('callback')
         })
 
-        if (index > -1) {
-          subscriptions.splice(index, 1)
-          eventChannel.removeAllListeners()
-          alert(subscriptions)
-        }
+        console.log(subscriptions)
+
+        eventChannel.removeAllListeners()
+        alert(subscriptions)
       } else {
         return next(new errs.BadRequestError('Callback for downgrading webhook is required.'))
       }
