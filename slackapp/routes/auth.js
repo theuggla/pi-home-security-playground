@@ -62,33 +62,43 @@ router.route('/authorize/callback')
     .get((req, res, next) => {
       if (req.query && (req.query.state === process.env.SLACK_STATE)) {
         let query = querystring.stringify({ redirect_uri: process.env.URL + '/auth/authorize/callback', client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, code: req.query.code })
+        let response
+
         axios.post('https://slack.com/api/oauth.access', query, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-        .then((response) => {
-          User.findOrCreate({'slack.id': response.data.user_id}, {'slack.id': response.data.user_id, 'slack.accessToken': response.data.access_token, 'slack.webhookURL': response.data.incoming_webhook.url, 'slack.channel': response.data.incoming_webhook.channel}, (err, user) => {
-            if (err) {
-              return res.send(500)
-            }
-            axios.get({
-              url: process.env.THING_PROXY + '/actions/takePicture',
-              headers: {
-                'upgrade': 'webhook',
-                'callback': process.env.URL + '/event/picture/' + response.data.user_id,
-                'authorization': user.proxyJWT
-              }
-            })
-            .then(() => {
-              return res.render('success')
-            })
-            .catch(() => {
-              return res.send(500)
+        .then((user) => {
+          response = user
+          return User.findOne({'slack.id': response.data.user_id})
+        })
+        .then((user) => {
+          user.slack.accessToken = response.data.access_token
+          user.slack.webhookURL = response.data.incoming_webhook.url
+          user.slack.channel = response.data.incoming_webhook.channel
+
+          return user.save()
+        })
+        .then((user) => {
+          return axios({
+            method: 'GET',
+            url: process.env.THING_PROXY + '/actions/takePicture',
+            headers: {
+              'upgrade': 'webhook',
+              'callback': process.env.URL + '/event/picture/' + response.data.user_id,
+              'authorization': 'Bearer ' + user.proxyJWT
+            },
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: false
             })
           })
         })
-        .catch(() => {
-          return res.send(500)
+        .then(() => {
+          return res.render('success')
+        })
+        .catch((error) => {
+          console.log(error)
+          return res.sendStatus(500)
         })
       } else {
-        return res.send(500)
+        return res.sendStatus(500)
       }
     })
 

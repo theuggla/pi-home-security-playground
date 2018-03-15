@@ -6,6 +6,7 @@
 let router = require('express').Router()
 
 // Routes--------------------------------------------------------------------------------------------------------
+
 // Verify that the command is coming from slack
 router.use((req, res, next) => {
   if (req.body.token === process.env.SLACK_VERIFICATION_TOKEN) return next()

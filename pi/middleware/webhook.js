@@ -15,6 +15,8 @@ let eventChannel = require('./../lib/event-channel')
  */
 function upgrade () {
   return function (req, res, next) {
+    console.log('upgrading to webhook')
+
     if (req.header('upgrade') && req.header('upgrade') === 'webhook') {
       if (req.header('callback')) {
         let id = Date.now()
@@ -22,6 +24,8 @@ function upgrade () {
         let event = getEvent(req.path())
 
         subscriptions.push({id: id, callback: callback, event: event})
+        console.log('upgraded')
+        console.log({id: id, callback: callback, event: event})
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
@@ -36,13 +40,14 @@ function upgrade () {
  */
 function alert () {
   return function (req, res, next) {
-    subscriptions.foreach((subscription) => {
+    subscriptions.forEach((subscription) => {
       eventChannel.on(subscription.event, () => {
         axios({
           method: 'POST',
           url: subscription.callback,
           data: {
-            event: subscription.event
+            event: subscription.event,
+            token: process.env.GATEWAY_TOKEN
           }
         })
       })

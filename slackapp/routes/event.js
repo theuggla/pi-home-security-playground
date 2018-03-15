@@ -9,19 +9,30 @@ let User = require('../models/User')
 
 // Routes--------------------------------------------------------------------------------------------------------
 
+// Verify that the event is coming from the Thing
+router.use((req, res, next) => {
+  if (req.body.token === process.env.SELF_VERIFICATION_TOKEN) return next()
+  res.sendStatus(403)
+})
+
 /**
  * Send out a webhook event to the slack channel
  * */
 router.route('/:event/:user')
-    .get((req, res, next) => {
-      console.log('someone is breaking in!')
-      axios({
-        method: 'POST',
-        url: 'https://hooks.slack.com/services/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',
-        headers: {'Content-Type': 'application/json'},
-        data: {
-          'text': 'Someone is breaking in!'
-        }
+    .post((req, res, next) => {
+      User.findOne({'slack.id': req.params.user})
+      .then((user) => {
+        axios({
+          method: 'POST',
+          url: user.slack.webhookURL,
+          headers: {'Content-Type': 'application/json'},
+          data: {
+            'text': 'Someone is breaking in!'
+          }
+        })
+      })
+      .catch((error) => {
+        console.log(error)
       })
     })
 
