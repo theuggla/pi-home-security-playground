@@ -38,6 +38,8 @@ function alarm (code, state, user) {
     .then((result) => {
       if (result.data.status === 'completed') {
         response.text = 'The alarm is ' + (state ? 'on' : 'off') + '.'
+      } else if (result.data.status === 'pending') {
+        response.text = 'Alarm is a bit slow to respond, I\'ll get back to you in a while.'
       } else {
         response.text = 'Wrong code.'
       }
