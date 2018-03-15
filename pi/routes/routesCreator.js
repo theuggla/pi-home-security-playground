@@ -242,12 +242,12 @@ function reverseResults (array) {
  */
 function checkParameters (actions, action, parameters) {
   let result
-  if (!actions.resources[action].values || !parameters) return true
+  if (!actions.resources[action].values) return true
 
   let params = Object.keys(actions.resources[action].values)
   params.every((param) => {
     if (actions.resources[action].values[param].required === true) {
-      result = parameters[param] !== undefined
+      result = parameters && parameters[param] !== undefined
       return result
     }
   })
