@@ -1,0 +1,6 @@
+**/certs
+node_modules
+**/node_modules
+.env
+**/.env
+**/access-control.json
