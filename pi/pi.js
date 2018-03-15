@@ -17,7 +17,7 @@ let webhook = require('./middleware/webhook')
 let linkHeader = require('restify-links')
 
 // Variables
-let port = process.env.PORT || 2424
+let port = process.env.PORT || 2323
 let cwd = __dirname || process.cwd()
 
 // Config -----------------------------------------------------------------------------------------------------

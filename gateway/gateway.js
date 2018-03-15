@@ -12,7 +12,7 @@ let proxy = require('./middleware/proxy')
 let bearerToken = require('express-bearer-token')
 
 // variables
-let port = process.env.PORT || 2323
+let port = process.env.PORT || 2424
 let cwd = __dirname || process.cwd()
 
 // Config -----------------------------------------------------------------------------------------------------

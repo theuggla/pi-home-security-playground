@@ -43,7 +43,7 @@ function alarm (code, state, user) {
       }
       resolve(response)
     })
-    .catch((error) => {
+    .catch(() => {
       response.text = 'It went badly.'
       reject(response)
     })
