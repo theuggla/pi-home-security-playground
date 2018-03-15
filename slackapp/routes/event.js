@@ -21,8 +21,6 @@ router.use((req, res, next) => {
  * */
 router.route('/:event/:user')
     .post((req, res, next) => {
-      console.log('got event')
-      console.log(req.params.event)
       let user
       User.findOne({'slack.id': req.params.user})
       .then((found) => {

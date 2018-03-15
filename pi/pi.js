@@ -29,6 +29,8 @@ let httpsServerOptions = {
   passphrase: process.env.CERT_PASSPHRASE
 }
 
+webhook.alert(subscriptions)
+
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
   httpsServerOptions: httpsServerOptions,
@@ -56,7 +58,6 @@ server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next()
 server.use(bearerToken())
 server.use(auth())
 server.use(webhook.upgrade(subscriptions))
-server.use(webhook.alert(subscriptions))
 
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond, subscriptions)
