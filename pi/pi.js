@@ -54,7 +54,8 @@ server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next()
 // Authorize
 server.use(bearerToken())
 server.use(auth())
-server.use(webhook())
+server.use(webhook.upgrade())
+server.use(webhook.alert())
 
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond)
