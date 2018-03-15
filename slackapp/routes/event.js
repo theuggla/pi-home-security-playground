@@ -6,6 +6,7 @@
 let router = require('express').Router()
 let axios = require('axios')
 let User = require('../models/User')
+let https = require('https')
 
 // Routes--------------------------------------------------------------------------------------------------------
 
@@ -20,14 +21,45 @@ router.use((req, res, next) => {
  * */
 router.route('/:event/:user')
     .post((req, res, next) => {
+      let user
       User.findOne({'slack.id': req.params.user})
-      .then((user) => {
-        axios({
+      .then((found) => {
+        user = found
+        return axios({
           method: 'POST',
           url: user.slack.webhookURL,
           headers: {'Content-Type': 'application/json'},
           data: {
-            'text': 'Someone is breaking in!'
+            'text': 'Camera has been activated.'
+          }
+        })
+      })
+      .then(() => {
+        return axios({
+          method: 'GET',
+          url: process.env.THING_PROXY + '/properties/camera',
+          headers: {'authorization': 'Bearer ' + user.proxyJWT},
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+          })
+        })
+      })
+      .then((resp) => {
+        let pictureURL = resp.data[0].picture
+        let attachments = [
+          {
+            'fallback': 'Picture taken.',
+            'pretext': 'At the present moment:',
+            'image_url': process.env.THING_PROXY + pictureURL
+          }
+        ]
+
+        return axios({
+          method: 'POST',
+          url: user.slack.webhookURL,
+          headers: {'Content-Type': 'application/json'},
+          data: {
+            'attachments': attachments
           }
         })
       })

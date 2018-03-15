@@ -30,7 +30,11 @@ function upgrade (subscriptions) {
           return sub.callback === req.header('callback')
         })
 
-        if (index > -1) subscriptions.splice(index, 1)
+        if (index > -1) {
+          subscriptions.splice(index, 1)
+          eventChannel.removeAllListeners()
+          alert(subscriptions)
+        }
       } else {
         return next(new errs.BadRequestError('Callback for downgrading webhook is required.'))
       }

@@ -65,13 +65,13 @@ function handleCommand (command, text, user) {
     case '/unsubscribe':
       return handler.unsubscribe(user)
     case '/snap':
-    break;
+      return handler.snap(user)
     case '/sound':
-    break;
+      return handler.sound(text, user)
     case '/pictures':
-    break;
+      return handler.pictures(user)
     case '/presence':
-    break;
+      return handler.presence(user)
   }
 }
 
