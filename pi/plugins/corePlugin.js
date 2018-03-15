@@ -28,7 +28,6 @@ class CorePlugin {
 
     this._actions = actionsIds
     this._model = resources.links.properties.resources[propertyId]
-    this.eventChannel = eventChannel
   }
 
   /**
@@ -97,7 +96,7 @@ class CorePlugin {
   observeActions () {
     this._actions.forEach((actionId) => {
       let event = actionId + 'Change'
-      this.eventChannel.on(event, (action) => {
+      eventChannel.on(event, (action) => {
         console.info('[plugin action detected] %s', actionId)
         if (this.doAction) this.doAction(action)
       })

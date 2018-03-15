@@ -6,6 +6,7 @@
 // Requires.
 let CorePlugin = require('./corePlugin')
 let utils = require('./../lib/utils')
+let eventChannel = require('./../lib/event-channel')
 
 // Class.
 class PirPlugin extends CorePlugin {
@@ -21,14 +22,14 @@ class PirPlugin extends CorePlugin {
    */
   doStop () {
     this._sensor.unexport()
-    this.eventChannel.emit('ledStateChange', {state: false})
+    eventChannel.emit('ledStateChange', {state: false})
   }
 
   /**
    * Turns the LED on.
    */
   doStart () {
-    this.eventChannel.emit('ledStateChange', {state: true})
+    eventChannel.emit('ledStateChange', {state: true})
   }
 
   /**
@@ -44,8 +45,9 @@ class PirPlugin extends CorePlugin {
       this._reading = presence
 
       if (presence) {
-        this.eventChannel.emit('takePictureChange', {})
-        this.eventChannel.emit('soundStateChange', {state: true})
+        console.log('emitting events for picture and sound')
+        eventChannel.emit('takePictureChange', {})
+        eventChannel.emit('soundStateChange', {state: true})
       }
     }
   }
@@ -88,8 +90,8 @@ class PirPlugin extends CorePlugin {
       this.showValue()
 
       if (value === 1) {
-        this.eventChannel.emit('takePictureChange', {})
-        this.eventChannel.emit('soundStateChange', {state: true})
+        eventChannel.emit('takePictureChange', {})
+        eventChannel.emit('soundStateChange', {state: true})
       }
     })
 
