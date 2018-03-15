@@ -34,6 +34,8 @@ router.route('/:event/:user')
       .catch((error) => {
         console.log(error)
       })
+
+      return res.sendStatus(200)
     })
 
 // Exports.

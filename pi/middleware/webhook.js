@@ -24,6 +24,16 @@ function upgrade (subscriptions) {
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
+    } else if (req.header('downgrade') && req.header('downgrade') === 'webhook') {
+      if (req.header('callback')) {
+        let index = subscriptions.findIndex((sub) => {
+          return sub.callback === req.header('callback')
+        })
+
+        if (index > -1) subscriptions.splice(index, 1)
+      } else {
+        return next(new errs.BadRequestError('Callback for downgrading webhook is required.'))
+      }
     }
 
     return next()
@@ -44,6 +54,9 @@ function alert (subscriptions) {
             event: subscription.event,
             token: process.env.GATEWAY_TOKEN
           }
+        })
+        .catch((error) => {
+          console.log(error)
         })
       })
     })
