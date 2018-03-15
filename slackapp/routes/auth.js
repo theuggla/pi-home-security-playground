@@ -64,11 +64,24 @@ router.route('/authorize/callback')
         let query = querystring.stringify({ redirect_uri: process.env.URL + '/auth/authorize/callback', client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, code: req.query.code })
         axios.post('https://slack.com/api/oauth.access', query, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then((response) => {
-          User.findOrCreate({'slack.id': response.data.user_id}, {'slack.id': response.data.user_id, 'slack.accessToken': response.data.access_token, 'slack.webhookURL': response.data.incoming_webhook.url, 'slack.channel': response.data.incoming_webhook.channel}, (err, result) => {
+          User.findOrCreate({'slack.id': response.data.user_id}, {'slack.id': response.data.user_id, 'slack.accessToken': response.data.access_token, 'slack.webhookURL': response.data.incoming_webhook.url, 'slack.channel': response.data.incoming_webhook.channel}, (err, user) => {
             if (err) {
               return res.send(500)
             }
-            return res.render('success')
+            axios.get({
+              url: process.env.THING_PROXY + '/actions/takePicture',
+              headers: {
+                'upgrade': 'webhook',
+                'callback': process.env.URL + '/event/picture/' + response.data.user_id,
+                'authorization': user.proxyJWT
+              }
+            })
+            .then(() => {
+              return res.render('success')
+            })
+            .catch(() => {
+              return res.send(500)
+            })
           })
         })
         .catch(() => {

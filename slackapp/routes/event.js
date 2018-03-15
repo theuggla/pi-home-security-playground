@@ -12,7 +12,7 @@ let User = require('../models/User')
 /**
  * Send out a webhook event to the slack channel
  * */
-router.route('/')
+router.route('/:event/:user')
     .get((req, res, next) => {
       console.log('someone is breaking in!')
       axios({
