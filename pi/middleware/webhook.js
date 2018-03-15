@@ -21,6 +21,9 @@ function upgrade (subscriptions) {
         let event = getEvent(req.path())
 
         subscriptions.push({id: id, callback: callback, event: event})
+
+        eventChannel.removeAllListeners()
+        alert(subscriptions)
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
