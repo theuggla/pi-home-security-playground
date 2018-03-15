@@ -36,7 +36,7 @@ function alarm (code, state, user) {
       })
     })
     .then((result) => {
-      if (result.data.status !== 'rejected') {
+      if (result.data.status === 'completed') {
         response.text = 'The alarm is ' + (state ? 'on' : 'off') + '.'
       } else {
         response.text = 'Wrong code.'
