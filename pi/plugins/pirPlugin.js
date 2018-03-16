@@ -86,6 +86,9 @@ class PirPlugin extends CorePlugin {
     let Gpio = require('onoff').Gpio
     this._sensor = new Gpio(this._model.values.presence.customFields.gpio, 'in', 'both')
     console.log(this._sensor)
+
+    console.log(this._sensor.readSync())
+
     this._sensor.watch((err, value) => {
       console.log('change in value of pir detected')
       if (err) process.exit(err)
@@ -100,6 +103,7 @@ class PirPlugin extends CorePlugin {
     })
 
     console.info('Hardware %s sensor started!', this._model.name)
+    console.log(this._sensor.readSync())
   }
 }
 
