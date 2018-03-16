@@ -212,8 +212,8 @@ function createActionsRoutes (model, respond) {
 function createSubscriptionRoutes (respond) {
   router.get('/subscriptions', (req, res, next) => {
     // Create response
-    Subscription.find({})
-    .then((subscriptions) => {
+    Subscription.find({}, (err, subscriptions) => {
+      if (err) return next(err)
       req.result = subscriptions
       return next()
     })
