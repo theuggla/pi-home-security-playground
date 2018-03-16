@@ -56,7 +56,10 @@
             "presence": {
               "name": "Presence",
               "description": "Current sensor value (true=motion detected)",
-              "type": "boolean"
+              "type": "boolean",
+              "customFields": {
+                "gpio": 17
+              }
             }
           },
           "tags": [

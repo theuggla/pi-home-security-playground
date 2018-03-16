@@ -90,6 +90,7 @@ class PirPlugin extends CorePlugin {
       this.showValue()
 
       if (value === 1) {
+        console.log('emitting events for picture and sound')
         eventChannel.emit('takePictureChange', {})
         eventChannel.emit('soundStateChange', {state: true})
       }
