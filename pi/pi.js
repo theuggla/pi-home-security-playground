@@ -38,9 +38,10 @@ let server = restify.createServer({
 })
 
 // Remove old images on upstart
-fs.rmdir(path.resolve(cwd, './images'), (err) => {
+fs.rmdir(path.resolve(cwd, './resources/images'), (err) => {
   if (err) {
     console.log('could not remove images')
+    console.log(err)
   } else {
     console.log('removed images')
   }
