@@ -15,9 +15,7 @@ class Handler {
 
   set (obj, prop, value) {
     if (value.action === true) {
-      console.log('action event')
       let eventType = value.type + 'Change'
-      console.log('emitting event ' + eventType)
       eventChannel.emit(eventType, value)
     }
 

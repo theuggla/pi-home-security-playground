@@ -15,13 +15,6 @@ class SoundPlugin extends CorePlugin {
   }
 
   /**
-   * Deactivates the sensor and turns the sound off.
-   */
-  doStop () {
-    this._actuator.unexport()
-  }
-
-  /**
    * Adds a simulation of an output.
    */
   doSimulate () {
@@ -32,7 +25,6 @@ class SoundPlugin extends CorePlugin {
    * Connects to the sound.
    */
   connectHardware () {
-    console.log('connecting hardware')
     this._actuator = require('play-sound')({player: 'omxplayer'})
   }
 

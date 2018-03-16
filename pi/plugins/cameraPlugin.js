@@ -15,13 +15,6 @@ class CameraPlugin extends CorePlugin {
   }
 
   /**
-   * Deactivates the camera.
-   */
-  doStop () {
-    this._actuator.unexport()
-  }
-
-  /**
    * Adds a simulation of an output.
    */
   doSimulate () {
