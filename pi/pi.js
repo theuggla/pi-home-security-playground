@@ -59,6 +59,11 @@ server.use(bearerToken())
 server.use(auth())
 server.use(webhook.upgrade(subscriptions))
 
+// Static files
+server.get(/\/images\/.*\.jpg$/, restify.plugins.serveStatic({
+  directory: './resources/'
+}))
+
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond, subscriptions)
 
