@@ -38,7 +38,7 @@ let server = restify.createServer({
 // Middleware -------------------------------------------------------------------------------------------------
 
 // Log
-server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next() })
+server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); console.log(req.headers); console.log(req.location); next() })
 
 // Clean up route
 server.pre(plugins.pre.dedupeSlashes())
