@@ -33,6 +33,7 @@
   "optionalDependencies": {
     "aplay": "^1.2.0",
     "onoff": "^2.0.0",
-    "pi-camera": "^1.0.1"
+    "pi-camera": "^1.0.1",
+    "play-sound": "^1.1.2"
   }
 }
