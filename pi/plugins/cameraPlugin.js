@@ -48,7 +48,7 @@ class CameraPlugin extends CorePlugin {
  */
   doAction (value) {
     console.log('Taking picture')
-    let filename = '/images/' + utils.isoTimestamp() + '.jpeg'
+    let filename = '/images/' + utils.isoTimestamp() + '.jpg'
     let pathToImage = path.resolve(__dirname, '../resources/' + filename)
     if (!this._params.simulate) {
       this._actuator.config.output = pathToImage

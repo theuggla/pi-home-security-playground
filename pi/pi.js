@@ -37,6 +37,15 @@ let server = restify.createServer({
   name: 'pi-security-system'
 })
 
+// Remove old images on upstart
+fs.rmdir(path.resolve(cwd, './images'), (err) => {
+  if (err) {
+    console.log('could not remove images')
+  } else {
+    console.log('removed images')
+  }
+})
+
 // Middleware -------------------------------------------------------------------------------------------------
 
 // Clean up route
