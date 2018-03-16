@@ -15,6 +15,7 @@ let restifyPlugins = require('restify').plugins
 let auth = require('./middleware/auth')
 let webhook = require('./middleware/webhook')
 let linkHeader = require('restify-links')
+let serveStatic = require('serve-static-restify')
 
 // Variables
 let port = process.env.PORT || 2323
@@ -59,13 +60,12 @@ server.use(bearerToken())
 server.use(auth())
 server.use(webhook.upgrade(subscriptions))
 
-// Static files
-server.get(/\/images\/.*\.jpg$/, restify.plugins.serveStatic({
-  directory: './resources/'
-}))
-
 // Routes ------------------------------------------------------------------------------------------------------
 createRoutes(server, model, respond, subscriptions)
+
+server.get(/\/images\/.*$/, restify.plugins.serveStatic({
+  directory: path.resolve(__dirname, './resources')
+}))
 
 // Plugins -----------------------------------------------------------------------------------------------------
 initPlugins()
