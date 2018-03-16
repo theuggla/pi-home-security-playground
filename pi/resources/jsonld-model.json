@@ -69,7 +69,10 @@
           "description": "The LEDs of this device.",
           "values": {
             "1": {
-              "name": "LED 1"
+              "name": "LED 1",
+              "customFields": {
+                "gpio": 4
+              }
             }
           },
           "tags": [
