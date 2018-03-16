@@ -33,12 +33,12 @@ function upgrade () {
             if (subscription) {
               eventChannel.on(subscription.event, alert(subscription))
             }
+
+            res.send(200)
           })
           .catch((err) => {
             console.log(err)
           })
-
-        return res.sendStatus(200)
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
@@ -52,7 +52,7 @@ function upgrade () {
             removeAllSubscriptionListeners(event)
             addAllSubscriptionListeners(event)
           })
-        return res.sendStatus(200)
+        return res.send(200)
       } else {
         return next(new errs.BadRequestError('Callback for downgrading webhook is required.'))
       }

@@ -153,7 +153,7 @@ function createActionsRoutes (model, respond) {
     if (!actions.resources[req.params.actionType] || (actions.resources[req.params.actionType].tags.indexOf('private') !== -1)) return next(new errs.NotFoundError('No such action.'))
 
     // Check for required parameters
-    if (!checkParameters(actions, req.params.actionType, req.body)) return next(new errs.BadRequestError('Missing parametes.'))
+    if (!checkParameters(actions, req.params.actionType, req.body)) return next(new errs.BadRequestError('Missing parameters.'))
 
     // Create action
     let action = req.body
