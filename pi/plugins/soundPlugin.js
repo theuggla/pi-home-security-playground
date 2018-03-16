@@ -31,8 +31,7 @@ class SoundPlugin extends CorePlugin {
    * Connects to the sound.
    */
   connectHardware () {
-    let Sound = require('aplay')
-    this._actuator = new Sound()
+    this._actuator = require('play-sound')()
   }
 
   /**
@@ -42,7 +41,13 @@ class SoundPlugin extends CorePlugin {
   doAction (value) {
     if (!this._params.simulate) {
       console.log('playing')
-      this._actuator.play('../resources/police_s.wav')
+      this._actuator.play('./../resources/police_s.wav', (err) => {
+        if (err) {
+          console.log('Could not play.')
+        } else {
+          console.log('Played.')
+        }
+      })
       this.addValue(value.state)
     } else {
       this.addValue(value.state)
