@@ -8,16 +8,16 @@ function init () {
   let CameraPlugin = require('./cameraPlugin')
   let SoundPlugin = require('./soundPlugin')
 
-  let ledsPlugin = new LedsPlugin({'simulate': process.env.SIMULATE, 'frequency': 100000})
+  let ledsPlugin = new LedsPlugin({'simulate': false, 'frequency': 100000})
   ledsPlugin.start()
 
-  let pirPlugin = new PirPlugin({'simulate': process.env.SIMULATE, 'frequency': 5000})
+  let pirPlugin = new PirPlugin({'simulate': false, 'frequency': 5000})
   pirPlugin.start()
 
   let soundPlugin = new SoundPlugin({'simulate': process.env.SIMULATE, 'frequency': 100000})
   soundPlugin.start()
 
-  let cameraPlugin = new CameraPlugin({'simulate': process.env.SIMULATE, 'frequency': 100000})
+  let cameraPlugin = new CameraPlugin({'simulate': false, 'frequency': 100000})
   cameraPlugin.start()
 
   process.on('SIGINT', () => {
