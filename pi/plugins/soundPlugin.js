@@ -43,6 +43,7 @@ class SoundPlugin extends CorePlugin {
       console.log('playing')
       this._actuator.play('./../resources/police_s.wav', (err) => {
         if (err) {
+          console.log(err)
           console.log('Could not play.')
         } else {
           console.log('Played.')
