@@ -6,6 +6,7 @@
 // Requires.
 let CorePlugin = require('./corePlugin')
 let utils = require('./../lib/utils')
+let path = require('path')
 
 // Class.
 class CameraPlugin extends CorePlugin {
@@ -47,7 +48,7 @@ class CameraPlugin extends CorePlugin {
  */
   doAction (value) {
     console.log('Taking picture')
-    let filename = `${__dirname}{/resources/images/${utils.isoTimestamp()}.jpg`
+    let filename = path.resolve(__dirname, `$../resources/images/${utils.isoTimestamp()}.jpg`)
     if (!this._params.simulate) {
       console.log('no simulation')
       this._actuator.config.output = filename
