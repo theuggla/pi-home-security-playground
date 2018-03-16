@@ -47,12 +47,13 @@ class CameraPlugin extends CorePlugin {
  */
   doAction (value) {
     console.log('Taking picture')
-    let filename = `/resources/images/${utils.isoTimestamp()}.jpg`
+    let filename = `${__dirname}{/resources/images/${utils.isoTimestamp()}.jpg`
     if (!this._params.simulate) {
       this._actuator.config.output = filename
       this._actuator.snap()
         .then(() => {
           this.addValue(filename)
+          console.log(filename)
         })
         .catch(() => {
           // Handle error
