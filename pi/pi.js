@@ -15,7 +15,6 @@ let restifyPlugins = require('restify').plugins
 let auth = require('./middleware/auth')
 let webhook = require('./middleware/webhook')
 let linkHeader = require('restify-links')
-let serveStatic = require('serve-static-restify')
 
 // Variables
 let port = process.env.PORT || 2323
