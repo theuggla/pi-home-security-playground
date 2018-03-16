@@ -82,9 +82,12 @@ class PirPlugin extends CorePlugin {
    * Adds value on change.
    */
   connectHardware () {
+    console.log('in hardware connect for pir')
     let Gpio = require('onoff').Gpio
     this._sensor = new Gpio(this._model.values.presence.customFields.gpio, 'in', 'both')
+    console.log(this._sensor)
     this._sensor.watch((err, value) => {
+      console.log('change in value of pir detected')
       if (err) process.exit(err)
       this.addValue(!!value)
       this.showValue()

@@ -40,6 +40,7 @@ class CorePlugin {
     if (this._params.simulate) {
       this.simulate()
     } else {
+      console.log('connecting pir hardware')
       this.connectHardware()
     }
 
