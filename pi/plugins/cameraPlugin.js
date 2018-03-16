@@ -54,7 +54,7 @@ class CameraPlugin extends CorePlugin {
       this._actuator.config.output = pathToImage
       this._actuator.snap()
         .then((result) => {
-          this.addValue('/images')
+          this.addValue(filename)
           console.log(filename)
         })
         .catch((error) => {

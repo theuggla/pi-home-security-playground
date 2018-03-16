@@ -46,7 +46,7 @@ function alarm (code, state, user) {
       resolve(response)
     })
     .catch(() => {
-      response.text = 'It went badly.'
+      response.text = 'It went badly, try again.'
       reject(response)
     })
   })
@@ -72,7 +72,7 @@ function snap (user) {
       resolve(response)
     })
     .catch(() => {
-      response.text = 'It went badly.'
+      response.text = 'It went badly, try again.'
       reject(response)
     })
   })
@@ -108,7 +108,7 @@ function sound (command, user) {
       resolve(response)
     })
     .catch(() => {
-      response.text = 'It went badly.'
+      response.text = 'It went badly, try again.'
       reject(response)
     })
   })
@@ -147,7 +147,7 @@ function pictures (user) {
       resolve(response)
     })
     .catch(() => {
-      response.text = 'It went badly.'
+      response.text = 'It went badly, try again.'
       reject(response)
     })
   })
@@ -180,7 +180,7 @@ function presence (user) {
       resolve(response)
     })
     .catch(() => {
-      response.text = 'It went badly.'
+      response.text = 'It went badly, try again.'
       reject(response)
     })
   })
