@@ -132,6 +132,7 @@ function pictures (user) {
     .then((resp) => {
       let attachments = []
       console.log(resp.data)
+      console.log(process.env.THING_PROXY + resp.data[0].picture)
 
       for (let i = 0; i < resp.data.length && i < 10; i++) {
         attachments.push({
