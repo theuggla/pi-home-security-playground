@@ -42,11 +42,8 @@ class SoundPlugin extends CorePlugin {
  */
   doAction (value) {
     if (!this._params.simulate) {
-      console.log('playing: ' + path.resolve(__dirname, '../resources/police_s.wav'))
-
       this._actuator.play(path.resolve(__dirname, '../resources/police_s.wav'), (err) => {
         if (err) {
-          console.log(err)
           console.log('Could not play.')
         } else {
           console.log('Played.')
@@ -58,7 +55,6 @@ class SoundPlugin extends CorePlugin {
     }
 
     value.status = 'completed'
-    value.state ? console.log('PRRRRRRRRRRR') : console.log('.................')
   }
 
   /**

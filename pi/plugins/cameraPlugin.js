@@ -47,7 +47,6 @@ class CameraPlugin extends CorePlugin {
  * writing to the hardware. Change the action status to complete.
  */
   doAction (value) {
-    console.log('Taking picture')
     let filename = '/images/' + utils.isoTimestamp() + '.jpg'
     let pathToImage = path.resolve(__dirname, '../resources/' + filename)
     if (!this._params.simulate) {
@@ -55,11 +54,9 @@ class CameraPlugin extends CorePlugin {
       this._actuator.snap()
         .then((result) => {
           this.addValue(filename)
-          console.log(filename)
         })
         .catch((error) => {
           console.log(error)
-          // Handle error
         })
     } else {
       this.addValue(filename)
@@ -67,7 +64,7 @@ class CameraPlugin extends CorePlugin {
 
     value.status = 'completed'
 
-    console.info('Changed value of %s to %s', this._model.name, value.state)
+    console.info('Changed value of %s to %s', this._model.name, filename)
   }
 
   /**

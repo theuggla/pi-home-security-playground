@@ -39,13 +39,11 @@ class PirPlugin extends CorePlugin {
     let presence = Boolean(Math.floor(Math.random() * 2))
 
     if (presence !== this._reading) {
-      console.log('presece: ' + presence)
       this.addValue(presence)
       this.showValue()
       this._reading = presence
 
       if (presence) {
-        console.log('emitting events for picture and sound')
         eventChannel.emit('takePictureChange', {})
         eventChannel.emit('soundStateChange', {state: true})
       }
@@ -82,28 +80,21 @@ class PirPlugin extends CorePlugin {
    * Adds value on change.
    */
   connectHardware () {
-    console.log('in hardware connect for pir')
     let Gpio = require('onoff').Gpio
     this._sensor = new Gpio(this._model.values.presence.customFields.gpio, 'in', 'both')
-    console.log(this._sensor)
-
-    console.log(this._sensor.readSync())
 
     this._sensor.watch((err, value) => {
-      console.log('change in value of pir detected')
       if (err) process.exit(err)
       this.addValue(!!value)
       this.showValue()
 
       if (value === 1) {
-        console.log('emitting events for picture and sound')
         eventChannel.emit('takePictureChange', {})
         eventChannel.emit('soundStateChange', {state: true})
       }
     })
 
     console.info('Hardware %s sensor started!', this._model.name)
-    console.log(this._sensor.readSync())
   }
 }
 

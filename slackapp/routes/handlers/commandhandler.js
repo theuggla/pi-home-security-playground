@@ -131,8 +131,6 @@ function pictures (user) {
     })
     .then((resp) => {
       let attachments = []
-      console.log(resp.data)
-      console.log(process.env.THING_PROXY + resp.data[0].picture)
 
       for (let i = 0; i < resp.data.length && i < 10; i++) {
         attachments.push({
@@ -214,40 +212,6 @@ function subscribe (user) {
 }
 
 /**
- * Returns the currently subscribed users.
- */
-function subscriptions (user) {
-  return new Promise((resolve, reject) => {
-    let response = {}
-
-    axios({
-      method: 'GET',
-      url: process.env.THING_PROXY + '/subscriptions',
-      headers: {'authorization': 'Bearer ' + user.proxyJWT},
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-      })
-    })
-    .then((resp) => {
-      let subscribers = (resp.data.length === 0)
-      ? 'No currently subscribed users.'
-      : resp.data.map((sub) => {
-        let callbackArray = sub.callback.split('/')
-        let userID = callbackArray[(callbackArray.length - 1)]
-        return userID
-      }).join(', ')
-
-      response.text = 'Current subscribers: ' + subscribers
-      resolve(response)
-    })
-    .catch(() => {
-      response.text = 'Couldn\'t get subscriptions.'
-      resolve(response)
-    })
-  })
-}
-
-/**
  * Unsubscribes the user to the picture event.
  */
 function unsubscribe (user) {
@@ -277,7 +241,6 @@ function unsubscribe (user) {
 module.exports = {
   alarm: alarm,
   subscribe: subscribe,
-  subscriptions: subscriptions,
   unsubscribe: unsubscribe,
   snap: snap,
   presence: presence,

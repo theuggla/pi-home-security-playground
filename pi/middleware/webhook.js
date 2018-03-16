@@ -38,7 +38,7 @@ function upgrade () {
             console.log(err)
           })
 
-        return next()
+        return res.sendStatus(200)
       } else {
         return next(new errs.BadRequestError('Callback for webhook is required.'))
       }
@@ -52,6 +52,7 @@ function upgrade () {
             removeAllSubscriptionListeners(event)
             addAllSubscriptionListeners(event)
           })
+        return res.sendStatus(200)
       } else {
         return next(new errs.BadRequestError('Callback for downgrading webhook is required.'))
       }

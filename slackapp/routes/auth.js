@@ -30,6 +30,7 @@ router.route('/authenticate')
  * */
 router.route('/authenticate/callback')
     .get(passport.authenticate('slack', { session: false }), (req, res, next) => {
+      console.log(req.user)
       axios.post(process.env.THING_PROXY + '/authorize', {id: req.user.id}, {
         httpsAgent: new https.Agent({
           rejectUnauthorized: false

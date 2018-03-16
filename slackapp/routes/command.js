@@ -41,7 +41,7 @@ router.route('/')
         method: 'POST',
         url: user.slack.webhookURL,
         headers: {'Content-Type': 'application/json'},
-        data: {text: 'Something went badly.'}
+        data: {text: 'Something went badly, try again.'}
       })
     })
     .catch((error) => {
@@ -60,8 +60,6 @@ function handleCommand (command, text, user) {
       return handler.alarm(text, false, user)
     case '/subscribe':
       return handler.subscribe(user)
-    case '/subscriptions':
-      return handler.subscriptions(user)
     case '/unsubscribe':
       return handler.unsubscribe(user)
     case '/snap':
