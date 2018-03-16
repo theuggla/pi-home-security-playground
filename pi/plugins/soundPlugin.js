@@ -6,6 +6,7 @@
 // Requires.
 let CorePlugin = require('./corePlugin')
 let utils = require('./../lib/utils')
+let path = require('path')
 
 // Class.
 class SoundPlugin extends CorePlugin {
@@ -42,7 +43,7 @@ class SoundPlugin extends CorePlugin {
   doAction (value) {
     if (!this._params.simulate) {
       console.log('playing')
-      this._actuator.play('./../resources/police_s.wav', (err) => {
+      this._actuator.play(path.resolve(__dirname, '/../resources/police_s.wav'), (err) => {
         if (err) {
           console.log(err)
           console.log('Could not play.')
