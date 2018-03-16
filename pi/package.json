@@ -31,10 +31,15 @@
     "restify": "^6.3.4",
     "restify-errors": "^6.0.0",
     "restify-links": "^1.1.0",
+<<<<<<< HEAD
     "restify-router": "^0.5.0"
   },
   "optionalDependencies": {
     "onoff": "^2.0.0",
     "pi-camera": "^1.0.1"
+=======
+    "restify-router": "^0.5.0",
+    "serve-static-restify": "^2.0.0"
+>>>>>>> 67d30939a10fda70c2b21870658fdd3542f484e0
   }
 }
