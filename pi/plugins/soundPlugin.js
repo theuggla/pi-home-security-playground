@@ -31,7 +31,8 @@ class SoundPlugin extends CorePlugin {
    * Connects to the sound.
    */
   connectHardware () {
-    this._actuator = require('play-sound')()
+    console.log('connecting hardware')
+    this._actuator = require('play-sound')({player: 'omxplayer'})
   }
 
   /**
