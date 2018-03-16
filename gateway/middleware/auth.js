@@ -83,7 +83,7 @@ function isOpen (path) {
  * Check if it is the slack bot enquiring for an image
  */
 function isSlackForImagePath (path, agent) {
-  return path.indexOf('images/') !== -1 && agent.indexOf('Slackbot 1.0') !== -1
+  return path.indexOf('images/') !== -1 && agent.indexOf('Slack') !== -1
 }
 
 /*
