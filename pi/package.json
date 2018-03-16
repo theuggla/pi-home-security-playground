@@ -1,26 +1,11 @@
 {
-  "name": "home-security",
+  "name": "home-security-pi",
   "version": "1.0.0",
-  "description": "home security system for raspberry pi",
+  "description": "A home security system for the raspberry pi",
   "main": "pi.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "directories": {
+    "lib": "lib"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/theuggla/pi-home-security-playground.git"
-  },
-  "keywords": [
-    "raspberry",
-    "node",
-    "slack"
-  ],
-  "author": "Molly Arhammar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/theuggla/pi-home-security-playground/issues"
-  },
-  "homepage": "https://github.com/theuggla/pi-home-security-playground#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "cors": "^2.8.4",
@@ -31,9 +16,22 @@
     "restify": "^6.3.4",
     "restify-errors": "^6.0.0",
     "restify-links": "^1.1.0",
-    "restify-router": "^0.5.0"
+    "restify-router": "^0.5.0",
+    "serve-static-restify": "^2.0.0"
   },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "raspberry",
+    "node",
+    "restify"
+  ],
+  "author": "Molly Arhammar",
+  "license": "ISC",
   "optionalDependencies": {
+    "aplay": "^1.2.0",
     "onoff": "^2.0.0",
     "pi-camera": "^1.0.1"
   }
