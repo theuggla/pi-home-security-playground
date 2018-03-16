@@ -14,6 +14,8 @@ function jwtAuth () {
   return function (req, res, next) {
     if (isOpen(req.path())) {
       return next()
+    } else if (isSlackForImagePath(req.path(), req.header('user-agent'))) {
+      return next()
     } else {
       if (!req.token) {
         return next(new err.UnauthorizedError({success: false, message: 'API token missing.'}))
@@ -75,6 +77,13 @@ function findInAccessList (filter) {
 */
 function isOpen (path) {
   return (access.open.indexOf(path) !== -1)
+}
+
+/**
+ * Check if it is the slack bot enquiring for an image
+ */
+function isSlackForImagePath (path, agent) {
+  return path.indexOf('images/') !== -1 && agent.indexOf('Slackbot 1.0') !== -1
 }
 
 /*
