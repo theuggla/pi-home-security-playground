@@ -41,6 +41,7 @@ class SoundPlugin extends CorePlugin {
  */
   doAction (value) {
     if (!this._params.simulate) {
+      console.log('playing')
       this._actuator.play('../resources/police_s.wav')
       this.addValue(value.state)
     } else {
