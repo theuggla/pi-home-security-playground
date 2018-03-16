@@ -131,6 +131,7 @@ function pictures (user) {
     })
     .then((resp) => {
       let attachments = []
+      console.log(resp.data)
 
       for (let i = 0; i < resp.data.length && i < 10; i++) {
         attachments.push({
