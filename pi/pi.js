@@ -7,8 +7,9 @@ let cors = require('cors')
 let createRoutes = require('./routes/routesCreator')
 let respond = require('./routes/responseHandler')()
 let model = require('./resources/model')
-let subscriptions = require('./resources/subscriptions')
 let initPlugins = require('./plugins/plugins')
+let internalEventChannel = require('./lib/event-channel')
+let externalEventChannel = require('./lib/external-event-channel')
 
 // Middleware
 let restifyPlugins = require('restify').plugins
@@ -19,6 +20,8 @@ let linkHeader = require('restify-links')
 // Variables
 let port = process.env.PORT || 2323
 let cwd = __dirname || process.cwd()
+let db = require('./lib/db-connector')
+let supportedSubEvents = ['takePictureChange']
 
 // Config -----------------------------------------------------------------------------------------------------
 require('dotenv').config({path: path.join(cwd, '/.env')})
@@ -29,7 +32,17 @@ let httpsServerOptions = {
   passphrase: process.env.CERT_PASSPHRASE
 }
 
-webhook.alert(subscriptions)
+// DB.
+db.connect()
+
+// Set up alert for all supported subscription events on subscription channel
+supportedSubEvents.forEach((event) => {
+  internalEventChannel.on(event, () => {
+    externalEventChannel.emit(event)
+  })
+
+  webhook.addAllSubscriptionListeners(event)
+})
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
@@ -70,10 +83,10 @@ server.pre((req, res, next) => { console.log(req.method + ' ' + req.url); next()
 // Authorize
 server.use(bearerToken())
 server.use(auth())
-server.use(webhook.upgrade(subscriptions))
+server.use(webhook.upgrade())
 
 // Routes ------------------------------------------------------------------------------------------------------
-createRoutes(server, model, respond, subscriptions)
+createRoutes(server, model, respond)
 
 server.get(/\/images\/.*$/, restify.plugins.serveStatic({
   directory: path.resolve(__dirname, './resources')

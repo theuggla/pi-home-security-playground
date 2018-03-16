@@ -8,6 +8,7 @@ let router = new RestifyRouter()
 let uuid = require('node-uuid')
 let utils = require('../lib/utils')
 let errs = require('restify-errors')
+let Subscription = require('./../resources/subscriptions')
 
 // Creates routes.
 function create (server, model, respond, subscriptions) {
@@ -208,12 +209,14 @@ function createActionsRoutes (model, respond) {
 /**
  * Returns the subscriptions.
  */
-function createSubscriptionRoutes (subscriptions, respond) {
+function createSubscriptionRoutes (respond) {
   router.get('/subscriptions', (req, res, next) => {
     // Create response
-    req.result = subscriptions
-
-    return next()
+    Subscription.find({})
+    .then((subscriptions) => {
+      req.result = subscriptions
+      return next()
+    })
   }, respond)
 }
 
