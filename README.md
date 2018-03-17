@@ -9,6 +9,11 @@ The Pi will, when turned on:
   * Have a speaker that will make a sound when called.
   * If the motion sensor is activated, the Pi will automatically take a picture, sound the sound, and send the picture to all the subscribed users.
 
+  
+[![The Rapberry Pi.](20180317_152848.jpg)](20180317_152848.jpg)
+
+[![The Raspberry Pi.](20180317_152908.jpg)](20180317_152908.jpg)
+
 # Test functionality.
 The Raspberry only allows connections from a gateway, and the gateway only allows connections from two specific slack userIDs. To test the application/raspberry's functionality you can either log in on a specific slack account created for this purpose, or download and run the Postman-tests provided in this repository. The slack-commands only offers a limited functionality, so I'd reccomend doing both. The pi is running on a port on my home network with a camera, so it'll not be on all the time - please let me know somewhat around when it will be tested so I can make sure it's on.
 
