@@ -25,6 +25,7 @@ class SoundPlugin extends CorePlugin {
    * Connects to the sound.
    */
   connectHardware () {
+    console.log('connecting sound')
     this._actuator = require('play-sound')({player: 'omxplayer'})
   }
 
@@ -33,6 +34,8 @@ class SoundPlugin extends CorePlugin {
  * writing to the hardware. Change the action status to complete.
  */
   doAction (value) {
+    console.log('got sound action')
+    console.log(value)
     if (!this._params.simulate) {
       this._actuator.play(path.resolve(__dirname, '../resources/police_s.wav'), (err) => {
         if (err) {

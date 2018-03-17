@@ -1,0 +1,2452 @@
+{
+	"info": {
+		"name": "Raspberry",
+		"_postman_id": "36d4baf9-019c-250a-fd51-63d51e7926e3",
+		"description": "Collection for testing the Raspberry WOT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/",
+			"description": "",
+			"item": [
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e891f2dc-e5f6-4af1-abcd-10c1c4e5c2c0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Contains name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains @id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['@id']).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains description\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains tags\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.tags).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains link header\", function () {",
+									"    pm.response.to.have.header(\"Link\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/authorize",
+			"description": "",
+			"item": [
+				{
+					"name": "POST - 200 - Unauthenticated - Correct login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40f95749-feb8-4e1e-a010-564cf6367c4d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct login returns Authorization header\", function () {",
+									"    pm.response.to.have.header(\"Authorization\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{AUTH_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/authorize",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"authorize"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "POST - 200 - Unauthenticated - Incorrect login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "735e5ec8-28ff-4ed6-9187-a0bfe0ba5e58",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"InCćorrect login does not return Authorization header\", function () {",
+									"    pm.response.to.not.have.header(\"Authorization\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHENTICATED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/authorize",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"authorize"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 404 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bd82d2f8-34bc-4e07-8d5b-9028a3f1383e",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Incorrect login does not return Authorization header\", function () {",
+									"    pm.response.to.not.have.header(\"Authorization\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTH_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/authorize",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"authorize"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/model",
+			"description": "",
+			"item": [
+				{
+					"name": "GET - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6b8327e5-f9b2-4e50-9cf0-f23f9c53825c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Contains name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains @id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['@id']).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains description\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains tags\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.tags).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains link header\", function () {",
+									"    pm.response.to.have.header(\"Link\");",
+									"});",
+									"",
+									"pm.test(\"Contains links\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.links).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains properties\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.links.properties).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Contains actions\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.links.actions).to.exist;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/model",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"model"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/model",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"model"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/model",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"model"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/properties",
+			"description": "",
+			"item": [
+				{
+					"name": "GET - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "015aef3a-fcdf-4a50-b1c6-95434ae8c4f1",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});",
+									"",
+									"pm.test(\"Response includes sound propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var sound = jsonData.find(function (obj) { return obj.id === 'sound' });",
+									"    pm.expect(sound).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response includes pir propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"     var pir = jsonData.find(function (obj) { return obj.id === 'pir' });",
+									"    pm.expect(pir).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response includes camera propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var camera = jsonData.find(function (obj) { return obj.id === 'camera' });",
+									"    pm.expect(camera).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response includes leds propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var leds = jsonData.find(function (obj) { return obj.id === 'leds' });",
+									"    pm.expect(leds).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response does not include keypad propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var keypad = jsonData.find(function (obj) { return obj.id === 'keypad' });",
+									"    pm.expect(keypad).to.not.exist;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/properties",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/properties/:id",
+			"description": "",
+			"item": [
+				{
+					"name": "GET /sound - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "690d8221-2007-48ba-a2ea-99fe7d63abdc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/sound",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"sound"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /sound - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/sound",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"sound"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /sound - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/properties/sound",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"sound"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /camera - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c622c48-e206-4cdb-b167-47cc843e84ee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/camera",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"camera"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /camera - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/camera",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"camera"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /camera - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/properties/camera",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"camera"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /pir - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fedbbb8e-d415-4ae7-9b02-660168198c13",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/pir",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"pir"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /pir - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/pir",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"pir"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /pir - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/properties/pir",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"pir"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /leds - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bff7b7b8-2cfb-4d1f-8eb6-de7e9978a5b6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/leds",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"leds"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /leds - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/properties/leds",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"leds"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /leds - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/properties/leds",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"properties",
+								"leds"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/actions",
+			"description": "",
+			"item": [
+				{
+					"name": "GET - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ac9b1bc9-1329-4117-b5c4-784df2e28418",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.length;",
+									"});",
+									"",
+									"pm.test(\"Response includes alarmState action\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var alarmState = jsonData.find(function (obj) { return obj.id === 'alarmState' });",
+									"    pm.expect(alarmState).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response includes takePicture propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"     var takePicture = jsonData.find(function (obj) { return obj.id === 'takePicture' });",
+									"    pm.expect(takePicture).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response includes soundState propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var soundState = jsonData.find(function (obj) { return obj.id === 'soundState' });",
+									"    pm.expect(soundState).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Response does not include ledState propertyy\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var ledState = jsonData.find(function (obj) { return obj.id === 'ledState' });",
+									"    pm.expect(ledState).to.not.exist;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/actions/:actionType",
+			"description": "",
+			"item": [
+				{
+					"name": "GET - /takePicture - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4caa99d5-d711-438d-a938-45ab9386811a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/takePicture",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"takePicture"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /takePicture - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/takePicture",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"takePicture"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /takePicture - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/takePicture",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"takePicture"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /soundState - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4caa99d5-d711-438d-a938-45ab9386811a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /soundState - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /soundState - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /alarmState - 200 - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4caa99d5-d711-438d-a938-45ab9386811a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /alarmState - 403 - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51754276-475c-4c02-9ba3-4fd1cabfe595",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UNAUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"{{UNAUTHORIZED_SLACK_ID}}\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - /alarmState - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "211e377f-cddf-49cd-9b84-539e32a01bee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /alarmState - 400 - No body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a779df39-bda1-4bf5-b56e-d088ab572b41",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /alarmState - 204 - Correct - Alarm OFF",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Contains location header\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});"
+								],
+								"id": "39404b58-250e-4343-bac4-afee1e0287d3",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"state\": false, \"code\": \"1891\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /alarmState - 204 - Correct - Alarm ON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "39404b58-250e-4343-bac4-afee1e0287d3",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Contains location header\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"state\": true, \"code\": \"1891\"}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/alarmState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"alarmState"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /takePicture - 204 - Correct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Contains location header\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});"
+								],
+								"id": "39404b58-250e-4343-bac4-afee1e0287d3",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/actions/takePicture",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"takePicture"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /soundState - 204 - Correct - turn sound on",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Contains location header\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});"
+								],
+								"id": "39404b58-250e-4343-bac4-afee1e0287d3",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"state\": true}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /soundState - 400 - No body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"id": "a3141428-a97c-44ac-a4d1-2333cba36eb4",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - /soundState - 204 - Correct - turn sound off",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Contains location header\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});"
+								],
+								"id": "39404b58-250e-4343-bac4-afee1e0287d3",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AUTH_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"state\": false}"
+						},
+						"url": {
+							"raw": "{{URL}}/actions/soundState",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"actions",
+								"soundState"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/actions/:actionType/:id",
+			"description": "",
+			"item": [
+				{
+					"name": "Turn on sound-flow.",
+					"description": "",
+					"item": [
+						{
+							"name": "Do a sound action",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "aae6fe88-ee49-41c5-a6f1-63b99ea3f331",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											"",
+											"pm.test(\"Contains location header\", function () {",
+											"    pm.response.to.have.header(\"Location\");",
+											"});",
+											"",
+											"pm.environment.set(\"SoundActionOn\", postman.getResponseHeader(\"Location\"));"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"state\": true}"
+								},
+								"url": {
+									"raw": "{{URL}}/actions/soundState",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"actions",
+										"soundState"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Check that the action exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7184ae9d-f36d-464c-a5b5-5e1635bfc746",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"",
+											"",
+											"if (body.status === \"pending\") {",
+											"  postman.setNextRequest(\"Check that the action exists\");",
+											"} else {",
+											"  postman.setNextRequest(\"Check that the action worked\"); ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}{{SoundActionOn}}",
+									"host": [
+										"{{URL}}{{SoundActionOn}}"
+									]
+								},
+								"description": null
+							},
+							"response": []
+						},
+						{
+							"name": "Check that the action worked",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "18a78ba3-35f8-47af-ba8d-ea804d2b634b",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is array\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.length;",
+											"});",
+											"",
+											"pm.test(\"Action was run\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[0].playing).to.equal(true);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/properties/sound",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"properties",
+										"sound"
+									]
+								},
+								"description": null
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Take picture-flow.",
+					"description": "",
+					"item": [
+						{
+							"name": "Take picture",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ba42e4d7-95ef-46c8-91a7-b5cb1ffb0b99",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											"",
+											"pm.test(\"Contains location header\", function () {",
+											"    pm.response.to.have.header(\"Location\");",
+											"});",
+											"",
+											"pm.environment.set(\"TakePictureAction\", postman.getResponseHeader(\"Location\"));"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/actions/takePicture",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"actions",
+										"takePicture"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Check that the action exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7184ae9d-f36d-464c-a5b5-5e1635bfc746",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"",
+											"",
+											"if (body.status === \"pending\") {",
+											"  postman.setNextRequest(\"Check that the action exists\");",
+											"} else {",
+											"  postman.setNextRequest(\"Check that the action worked\"); ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}{{TakePictureAction}}",
+									"host": [
+										"{{URL}}{{TakePictureAction}}"
+									]
+								},
+								"description": null
+							},
+							"response": []
+						},
+						{
+							"name": "Check that the action worked",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5b69839e-8717-44ad-9413-36bd6ab0267e",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is array\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.length;",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"pm.environment.set(\"TakePictureImage\", body[0].picture);"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/properties/camera",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"properties",
+										"camera"
+									]
+								},
+								"description": null
+							},
+							"response": []
+						},
+						{
+							"name": "GET /images/*.jpg - 200 - Authorized",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f9ae896f-e01e-490c-9f96-b49d47cf1f68",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AUTH_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}{{TakePictureImage}}",
+									"host": [
+										"{{URL}}{{TakePictureImage}}"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	]
+}
