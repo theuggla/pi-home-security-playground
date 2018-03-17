@@ -39,24 +39,23 @@ Log in to the workspace **lysandeltd** with the email **lysandeltd.raspberry@gma
 Download the Postman tests and environment provided in this repository and import them into a Postman program to run. Newman will reject the collection since the requests are made agains a self-signed cerificate, so just stick with importing them into Postman.
 
 They will show the result of, in line with Guidard and Trifas principles, calling the routes:
-/authorize - Returns an authorization header from the Gateway, containing a JWT to use for further requests against the Pi. If the JWT contains the userID of an authorized user the request will be proxied forth to the Pi.
 
-/  - Contains Link-header with links to model, ui and a short description.
+*/authorize* - Returns an authorization header from the Gateway, containing a JWT to use for further requests against the Pi. If the JWT contains the userID of an authorized user the request will be proxied forth to the Pi.
 
-/model - Returns the full model, with the properties and the actions of the device and their latest readings.
+*/*  - Contains Link-header with links to model, ui and a short description.
 
-/properties - returns the Pis properties and current values.
+*/model* - Returns the full model, with the properties and the actions of the device and their latest readings.
 
-/properties/:id - returns an array of the latest readings for a specific property. Available properties, as found under /properties, are **/sound**, **/pir**, **/camera**, and **/led**
+*/properties* - returns the Pis properties and current values.
 
-/actions - returns the available actions to take on the Pi as well as the latest action taken.
+*/properties/:id* - returns an array of the latest readings for a specific property. Available properties, as found under /properties, are **/sound**, **/pir**, **/camera**, and **/led**
 
-/actions/actionType - **GET** returns an array of the latest times someone took this action, as well as the status of the action, and the action ID. **POST** Posts a request to do the action, and returns a **Location** header of where to enquire about the status of the specific action. Avaliable actions, as stated under /actions, are **/soundState**, **alarmState** and **/takePicture**. A **GET** request to **takePicture** that includes an *Upgrade: webhhok* and a *callback* header will subscribe the user to all pictures that gets taken. The code is written to support subscriptions to all actions, but only the takePicture one is currently implemented.
+*/actions* - returns the available actions to take on the Pi as well as the latest action taken.
 
-/actions/actionType/:id - returns the information about and the status of an action with a specific ID.
+*/actions/actionType* - **GET** returns an array of the latest times someone took this action, as well as the status of the action, and the action ID. **POST** Posts a request to do the action, and returns a **Location** header of where to enquire about the status of the specific action. Avaliable actions, as stated under /actions, are **/soundState**, **/alarmState** and **/takePicture**. A **GET** request to **/takePicture** that includes an *Upgrade: webhhok* and a *callback* header will subscribe the user to all pictures that gets taken. The code is written to support subscriptions to all actions, but only the takePicture one is currently implemented.
 
-/images - Serves static images taken by the camera.
+*/actions/actionType/:id* - returns the information about and the status of an action with a specific ID.*
 
-/actions/actionType/:id and /images concerns specific, not always present resources, and are therefore tested as flows in folders under /actions/actionType/:id.
+*/images* - Serves static images taken by the camera.
 
-All routes are called as an authenticated and authorized, authenticated and unauthorized and unauthenticated user.
+**/actions/actionType/:id** and **/images** concerns specific, not always present resources, and are therefore tested as flows in folders under */actions/actionType/:id*. All routes are called as an authenticated and authorized, authenticated and unauthorized and unauthenticated user.
